@@ -13,5 +13,16 @@ export const PetSchema = z.object({
     color: z.string().optional(),
     weight: z.number().positive().optional(),
     height: z.number().positive().optional(),
+    image: z.url().optional(),
     notes: z.string().optional(),
+    updatedAt: z.string().refine((date) => {
+        const parsedDate = Date.parse(date);
+        return !isNaN(parsedDate);
+    }, {message: "Invalid date format."}),
+    createdAt: z.string().refine((date) => {
+        const parsedDate = Date.parse(date);
+        return !isNaN(parsedDate);
+    }, {message: "Invalid date format."}),
 })
+
+export type Pet = z.infer<typeof PetSchema>;
