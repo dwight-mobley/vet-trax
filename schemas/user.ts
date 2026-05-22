@@ -15,3 +15,5 @@ export const UserSchema = z.object({
         return !isNaN(parsedDate);
     }, {message: "Invalid date format."}),
 });
+
+export type User = z.infer<typeof UserSchema>;
