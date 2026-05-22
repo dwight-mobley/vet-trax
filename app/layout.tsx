@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {  Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import DashboardLayout from "@/components/layout/Dashboard";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter", // Expose as a CSS variable for Tailwind
 });
 
 const geistMono = Geist_Mono({
@@ -25,9 +26,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body>
+        <DashboardLayout>{children}</DashboardLayout>
+
+      </body>
+
     </html>
   );
 }

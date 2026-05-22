@@ -1,26 +1,47 @@
+/* app/globals.css */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Typography */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Clinical Teal (Primary) */
+  --color-primary: #0F766E;
+  --color-primary-light: #2DD4BF;
+  --color-primary-dark: #115E59;
+  --color-primary-contrast: #FFFFFF;
+
+  /* Warm Orange (Secondary) */
+  --color-secondary: #F97316;
+  --color-secondary-light: #FDBA74;
+  --color-secondary-dark: #C2410C;
+  --color-secondary-contrast: #FFFFFF;
+
+  /* Base UI Colors */
+  --color-background: #F8FAFC;
+  --color-background-paper: #FFFFFF;
+
+  /* Typography Colors */
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-text-disabled: #CBD5E1;
+
+  /* Medical/Notification Statuses */
+  --color-status-healthy: #22C55E;
+  --color-status-warning: #F59E0B;
+  --color-status-critical: #EF4444;
+  --color-status-info: #3B82F6;
+
+  /* Border Radii */
+  --radius-small: 4px;
+  --radius-medium: 8px;
+  --radius-large: 16px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Optional: Set global base styles if you prefer this over adding utility classes to the <body> tag */
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
