@@ -4,6 +4,7 @@ import "./globals.css";
 import DashboardLayoutClient from "@/components/layout/DashboardLayoutClient";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { requireUser } from "@/utils/supabase/auth";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,10 +26,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  //Supabase User
-  const cookieStore = await cookies();
-  const supabase = await createClient(cookieStore);
-  const {data:{user}} = await supabase.auth.getUser();
+
+  const user = await requireUser();
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
       <body>

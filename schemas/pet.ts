@@ -1,28 +1,12 @@
 import {z} from "zod";
+import { publicPetsInsertSchema} from "./database"
 
-export const PetSchema = z.object({
-    id: z.uuid({message: "Invalid pet id format."}),
-    name: z.string().min(2),
-    type: z.enum(["cat", "dog", "rabbit", "hamster", "horse", "other"]),
-    breed: z.string().optional(),
-    birthDate: z.string().refine((date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate) && parsedDate <= Date.now();
-    }, {message: "Invalid birth date. Must be a valid date in the past."}),
-    ownerId: z.uuid({message: "Invalid owner id format."}),
-    color: z.string().optional(),
-    weight: z.number().positive().optional(),
-    height: z.number().positive().optional(),
-    image: z.url().optional(),
-    notes: z.string().optional(),
-    updatedAt: z.string().refine((date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-    }, {message: "Invalid date format."}),
-    createdAt: z.string().refine((date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-    }, {message: "Invalid date format."}),
-})
+export type Pet = z.infer<typeof publicPetsInsertSchema>
 
-export type Pet = z.infer<typeof PetSchema>;
+//Creation Schema and Type
+export const PetCreateFormSchema = publicPetsInsertSchema.omit({owner_id: true, created_at: true, updated_at: true})
+export type PetCreateForm = z.infer<typeof PetCreateFormSchema>
+
+//Update Schema and Type
+export const PetUpdateFormSchema = publicPetsInsertSchema.partial().omit({owner_id: true, created_at: true, updated_at: true})
+export type PetUpdateForm = z.infer<typeof PetUpdateFormSchema>
