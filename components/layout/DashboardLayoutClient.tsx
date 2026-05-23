@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { NavLinks } from "./NavLinks";
 import { UserProfile } from "./UserProfile";
+import { User } from "@supabase/supabase-js";
 
 
 const NAV_ITEMS = [
@@ -23,18 +24,22 @@ const NAV_ITEMS = [
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayoutClient({ user, children }: {user:User | null; children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
+
+
   return (
     <div className="min-h-screen bg-background flex">
+      {user && <>
       {/*
         ========================================
         DESKTOP SIDEBAR
         ========================================
       */}
-      <aside className="hidden md:flex flex-col w-64 bg-background-paper border-r border-text-disabled/30 fixed inset-y-0 z-10">
+
+       <aside className="hidden md:flex flex-col w-64 bg-background-paper border-r border-text-disabled/30 fixed inset-y-0 z-10">
         {/* Logo Area */}
         <div className="h-16 flex items-center px-6 border-b border-text-disabled/20">
           <div className="w-8 h-8 rounded-small bg-primary flex items-center justify-center mr-3">
@@ -49,14 +54,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
 
         {/* User Profile Area (Bottom) */}
-       <UserProfile/>
+       <UserProfile user={user}/>
       </aside>
+
+
 
       {/*
         ========================================
         MOBILE TOP BAR & FLYOUT MENU
         ========================================
       */}
+
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-background-paper border-b border-text-disabled/30 flex items-center justify-between px-4 z-20">
         <div className="flex items-center">
           <div className="w-8 h-8 rounded-small bg-primary flex items-center justify-center mr-3">
@@ -93,13 +101,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         </div>
       </div>
+      </>
+}
 
       {/*
         ========================================
         MAIN CONTENT AREA
         ========================================
       */}
-      <main className="flex-1 flex flex-col md:ml-64 pt-16 md:pt-0 min-h-screen">
+      <main className={`
+          flex-1 flex flex-col min-h-screen
+          ${user
+            ? "md:ml-64 pt-16 md:pt-0"
+            : "justify-center items-center p-4 w-full"
+          }
+        `}>
         {children}
       </main>
     </div>
