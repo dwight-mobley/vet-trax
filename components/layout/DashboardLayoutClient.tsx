@@ -31,7 +31,7 @@ export default function DashboardLayoutClient({ user, children }: {user:User | n
 
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background flex overflow-y-scroll">
       {user && <>
       {/*
         ========================================

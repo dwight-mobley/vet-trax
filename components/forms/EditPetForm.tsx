@@ -6,6 +6,7 @@ import { PublicAnimals } from "@/schemas/database";
 import {  updatePet } from "@/actions/pet-actions";
 
 import { Pet,type PetUpdateForm, PetUpdateFormSchema } from "@/schemas/pet";
+import { ImageUploader } from "../ui/ImageUploader";
 
 
 const animalOptions: PublicAnimals[] = [
@@ -24,6 +25,8 @@ export default function AddPetForm({pet}:{pet:Pet}) {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setValue,
+    getValues
   } = useForm<PetUpdateForm>({
     resolver: zodResolver(PetUpdateFormSchema),
     defaultValues: {
@@ -224,15 +227,7 @@ export default function AddPetForm({pet}:{pet:Pet}) {
             <label className="block text-sm font-medium text-text-primary mb-1">
               Image URL (optional)
             </label>
-            <input
-              {...register("image")}
-              className="w-full border border-text-disabled rounded-medium px-3 py-2"
-            />
-            {errors.image && (
-              <p className="text-status-critical text-sm mt-1">
-                {errors.image.message}
-              </p>
-            )}
+           <ImageUploader url={getValues("image") || undefined} setValue={setValue} previousImage={pet.image || undefined }/>
           </div>
         </div>
       </div>
