@@ -5,7 +5,14 @@ import { CldUploadButton } from "next-cloudinary";
 import Image from "next/image";
 import { UseFormSetValue } from "react-hook-form";
 
-export const ImageUploader = ({ url, preset = "vet_trax", previousImage, setValue }: { url?: string; preset?: string; previousImage?:string,setValue: UseFormSetValue<PetCreateForm | PetUpdateForm> }) => {
+interface ImageUploaderProps {
+url?: string;
+preset?: string;
+previousImage?:string;
+setValue: UseFormSetValue<PetCreateForm> | UseFormSetValue<PetUpdateForm>
+}
+
+export const ImageUploader = ({ url, preset = "vet_trax", previousImage, setValue }: ImageUploaderProps) => {
   return (
     <div className="space-y-4">
       {/* Upload Button */}

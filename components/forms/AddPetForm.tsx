@@ -4,15 +4,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PublicAnimals } from "@/schemas/database";
 import { addPet } from "@/actions/pet-actions";
-import { z } from "zod";
+
 import { PetCreateForm, PetCreateFormSchema } from "@/schemas/pet";
-import { CldUploadButton } from "next-cloudinary";
-import Image from "next/image";
+
 import { ImageUploader } from "../ui/ImageUploader";
+import { useModal } from "@/context/ModalContext";
 
 const animalOptions: PublicAnimals[] = ["cat", "cow", "dog", "rabbit", "hamster", "horse", "other", "lizard"];
 
 export default function AddPetForm() {
+  const { showSuccess, showError } = useModal();
   const {
     register,
     handleSubmit,
@@ -37,8 +38,9 @@ export default function AddPetForm() {
   async function onSubmit(data: PetCreateForm) {
     const { success, message } = await addPet(data);
     if (!success) {
-      alert(message);
+      showError();
     }
+    showSuccess();
   }
 
   return (
@@ -137,11 +139,11 @@ export default function AddPetForm() {
             <textarea {...register("notes")} className="w-full border border-text-disabled rounded-medium px-3 py-2 h-24" />
             {errors.notes && <p className="text-status-critical text-sm mt-1">{errors.notes.message}</p>}
           </div>
-              
+
           {/* Image URL */}
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-text-primary mb-1">Image (optional)</label>
-            <ImageUploader url={getValues("image") as string} setValue={setValue}  />
+            <ImageUploader url={getValues("image") || undefined} setValue={setValue} />
             {errors.image && <p className="text-status-critical text-sm mt-1">{errors.image.message}</p>}
           </div>
         </div>

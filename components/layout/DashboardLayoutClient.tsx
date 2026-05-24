@@ -110,7 +110,7 @@ export default function DashboardLayoutClient({ user, children }: {user:User | n
         ========================================
       */}
       <main className={`
-          flex-1 flex flex-col min-h-screen
+          flex-1 flex flex-col min-h-screen grow
           ${user
             ? "md:ml-64 pt-16 md:pt-0"
             : "justify-center items-center p-4 w-full"
