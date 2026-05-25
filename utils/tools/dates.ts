@@ -5,7 +5,7 @@ type DueDate = {
     status: "past" | "today" | "near" | "upcoming";
 }
 export const dateCalculator = (date:string): DueDate => {
-
+  if(!date) return {date: "-", status: "upcoming"};
   const targetDate = new Date(date.replace(/-/g, '\/'));
   targetDate.setHours(0, 0, 0, 0);
   const today = new Date();
