@@ -3,10 +3,15 @@ import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
 //Types
-interface Pet {
-  name: string;
-  owner_id: string;
-}
+type ReminderRow = {
+  id: string;
+  due_date: string;
+  title: string;
+  pets: {
+    name: string;
+    owner_id: string;
+  } | null;
+};
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -27,44 +32,43 @@ export async function GET(request: Request) {
     tenDaysFromNow.setDate(today.getDate() + 10);
     const tenDaysStr = tenDaysFromNow.toISOString().split("T")[0];
 
-
     // 3. Execute the query with matching data formats
-
     const notifiedIds: string[] = [];
     const notificationsToSend: { email: string; reminders: { title: string; due_date: string; pet_name: string }[] }[] = [];
-    const { data: reminders, error: fetchError } = await supabase.from("reminders").select("id, due_date, title, pets(name, owner_id)").lte("due_date", tenDaysStr).or(`last_notified_at.is.null,last_notified_at.lt.${todayStr}`);
-
+    const { data: rawReminders, error: fetchError } = await supabase
+    .from<"reminders", ReminderRow>("reminders")
+    .select(`id, due_date, title, pets:pet_id(name, owner_id)`)
+    .lte("due_date", tenDaysStr)
+    .or(`last_notified_at.is.null,last_notified_at.lt.${todayStr}`);
     if (fetchError) throw fetchError;
+
+    // 4. Process the reminders and group them by user email
+    const reminders = (rawReminders ?? []) as unknown as ReminderRow[];
     for (const reminder of reminders) {
+      if (!reminder.pets) continue;
 
-      // Fetch the pet's owner email
-      const {
-        data: {
-          user: { email },
-        },
-      } = await supabase.auth.admin.getUserById(reminder.pets.owner_id);
+      const { data: userData, error: userError } = await supabase.auth.admin.getUserById(reminder.pets.owner_id);
 
-      //Add to notifications list
+      if (userError || !userData.user) continue;
+
+      const email = userData.user.email!;
+
       notifiedIds.push(reminder.id);
 
-      // Check if we already have a notification entry for this email
-      const existingNotification = notificationsToSend.find((n) => n.email === email);
-      if (existingNotification) {
-        existingNotification.reminders.push({
-          title: reminder.title,
-          due_date: reminder.due_date,
-          pet_name: reminder.pets.name,
-        });
+      const existing = notificationsToSend.find((n) => n.email === email);
+
+      const reminderObj = {
+        title: reminder.title,
+        due_date: reminder.due_date,
+        pet_name: reminder.pets.name,
+      };
+
+      if (existing) {
+        existing.reminders.push(reminderObj);
       } else {
         notificationsToSend.push({
-          email: email,
-          reminders: [
-            {
-              title: reminder.title,
-              due_date: reminder.due_date,
-              pet_name: reminder.pets.name,
-            },
-          ],
+          email,
+          reminders: [reminderObj],
         });
       }
     }
