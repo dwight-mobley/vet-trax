@@ -1,27 +1,51 @@
 import {z} from "zod";
+import { publicRemindersInsertSchema } from "./database"
+import { Pet } from "./pet";
 
-export const ReminderSchema = z.object({
-    id: z.uuid({message: "Invalid reminder id format."}),
-    petId: z.uuid({message: "Invalid pet id format."}),
-    title: z.string().min(2, {message: "Title must be at least 2 characters long."}),
-    description: z.string().optional(),
-    date: z.string().refine((date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate) && parsedDate >= Date.now();
-    }, {message: "Invalid date. Must be a valid date in the future."}),
-    repeat: z.enum(["none", "daily", "weekly", "monthly", "yearly"]),
-    nextOccurrence: z.string().refine((date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-    }, {message: "Invalid date format."}),
-    updatedAt: z.string().refine((date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-    }, {message: "Invalid date format."}),
-    createdAt: z.string().refine((date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-    }, {message: "Invalid date format."}),
+
+
+export const CreateReminderFormSchema = z.object({
+  pet_ids: z.array(z.string()).min(1, "Please select at least one pet."),
+  title: z.string().min(1, "Title is required."),
+  category: z.enum(["vaccination", "appointment", "medication", "test", "other"]),
+  due_date: z.string().min(1, "Due date is required."),
+  description: z.string().optional(),
+  is_recurring: z.boolean(),
+  recurrence_interval: z
+    .union([z.string(), z.number()])
+    .optional()
+    .nullable()
+    .transform((val) => {
+      if (val === "" || val === null || val === undefined) return null;
+      return Number(val);
+    }),
+
+  recurrence_period: z.string().optional().nullable(),
+}).superRefine((data, ctx) => {
+  if (data.is_recurring) {
+    if (!data.recurrence_interval) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Interval is required for recurring tasks",
+        path: ["recurrence_interval"],
+      });
+    }
+    if (!data.recurrence_period) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Period is required",
+        path: ["recurrence_period"],
+      });
+    }
+  }
 });
 
-export type Reminder = z.infer<typeof ReminderSchema>;
+export type CreateReminderFormInput = z.input<typeof CreateReminderFormSchema>;
+export type CreateReminderFormData = z.output<typeof CreateReminderFormSchema>;
+
+
+export type ReminderUpdate = Partial<CreateReminderFormInput> & { id: string };
+
+export type Reminder = z.infer<typeof publicRemindersInsertSchema> & { pet: Pet | null };
+
+

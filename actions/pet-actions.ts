@@ -78,7 +78,4 @@ export const deletePet = async (petId: string) => {
   if (error) {
     return { success: false, message: "Failed to delete pet." };
   }
-
-  revalidatePath("/pets");
-  redirect("/pets");
 };

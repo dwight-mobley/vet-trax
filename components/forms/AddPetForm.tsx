@@ -14,6 +14,7 @@ const animalOptions: PublicAnimals[] = ["cat", "cow", "dog", "rabbit", "hamster"
 
 export default function AddPetForm() {
   const { showSuccess, showError } = useModal();
+  
   const {
     register,
     handleSubmit,

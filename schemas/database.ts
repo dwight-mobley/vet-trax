@@ -17,6 +17,14 @@ export const publicAnimalsSchema = z.union([
   z.literal("lizard"),
 ]);
 
+export const publicReminderCategorySchema = z.union([
+  z.literal("vaccination"),
+  z.literal("appointment"),
+  z.literal("medication"),
+  z.literal("test"),
+  z.literal("other"),
+]);
+
 export const jsonSchema = z.lazy(() =>
   z
     .union([
@@ -50,7 +58,7 @@ export const publicPetsInsertSchema = z.object({
   breed: z.string().optional().nullable(),
   color: z.string().optional().nullable(),
   created_at: z.string().optional(),
-  height: z.float32().optional().nullable(),
+  height: z.number().optional().nullable(),
   id: z.string().optional(),
   image: z.string().optional().nullable(),
   name: z.string(),
@@ -58,7 +66,7 @@ export const publicPetsInsertSchema = z.object({
   owner_id: z.string(),
   type: publicAnimalsSchema,
   updated_at: z.string().optional().nullable(),
-  weight: z.number().int("Weight Must Be An Integer").optional().nullable(),
+  weight: z.number().optional().nullable(),
 });
 
 export const publicPetsUpdateSchema = z.object({
@@ -77,8 +85,127 @@ export const publicPetsUpdateSchema = z.object({
   weight: z.number().optional().nullable(),
 });
 
+export const publicReminderHistoryRowSchema = z.object({
+  category: publicReminderCategorySchema,
+  completed_at: z.string(),
+  created_at: z.string(),
+  id: z.string(),
+  notes: z.string().nullable(),
+  pet_id: z.string(),
+  title: z.string(),
+});
+
+export const publicReminderHistoryInsertSchema = z.object({
+  category: publicReminderCategorySchema,
+  completed_at: z.string(),
+  created_at: z.string().optional(),
+  id: z.string().optional(),
+  notes: z.string().optional().nullable(),
+  pet_id: z.string(),
+  title: z.string(),
+});
+
+export const publicReminderHistoryUpdateSchema = z.object({
+  category: publicReminderCategorySchema.optional(),
+  completed_at: z.string().optional(),
+  created_at: z.string().optional(),
+  id: z.string().optional(),
+  notes: z.string().optional().nullable(),
+  pet_id: z.string().optional(),
+  title: z.string().optional(),
+});
+
+export const publicReminderHistoryRelationshipsSchema = z.tuple([
+  z.object({
+    foreignKeyName: z.literal("reminder_history_pet_id_fkey"),
+    columns: z.tuple([z.literal("pet_id")]),
+    isOneToOne: z.literal(false),
+    referencedRelation: z.literal("pets"),
+    referencedColumns: z.tuple([z.literal("id")]),
+  }),
+]);
+
+export const publicRemindersRowSchema = z.object({
+  category: publicReminderCategorySchema,
+  created_at: z.string(),
+  date_completed: z.string().nullable(),
+  description: z.string().nullable(),
+  due_date: z.string(),
+  id: z.string(),
+  is_recurring: z.boolean(),
+  last_notified_at: z.string().nullable(),
+  pet_id: z.string(),
+  recurrence_interval: z.number().nullable(),
+  recurrence_period: z.string().nullable(),
+  title: z.string(),
+  updated_at: z.string(),
+});
+
+export const publicRemindersInsertSchema = z.object({
+  category: publicReminderCategorySchema.optional(),
+  created_at: z.string().optional(),
+  date_completed: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  due_date: z.string(),
+  id: z.string().optional(),
+  is_recurring: z.boolean().optional(),
+  last_notified_at: z.string().optional().nullable(),
+  pet_id: z.string(),
+  recurrence_interval: z.number().optional().nullable(),
+  recurrence_period: z.string().optional().nullable(),
+  title: z.string(),
+  updated_at: z.string().optional(),
+});
+
+export const publicRemindersUpdateSchema = z.object({
+  category: publicReminderCategorySchema.optional(),
+  created_at: z.string().optional(),
+  date_completed: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  due_date: z.string().optional(),
+  id: z.string().optional(),
+  is_recurring: z.boolean().optional(),
+  last_notified_at: z.string().optional().nullable(),
+  pet_id: z.string().optional(),
+  recurrence_interval: z.number().optional().nullable(),
+  recurrence_period: z.string().optional().nullable(),
+  title: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+
+export const publicRemindersRelationshipsSchema = z.tuple([
+  z.object({
+    foreignKeyName: z.literal("reminders_pet_id_fkey"),
+    columns: z.tuple([z.literal("pet_id")]),
+    isOneToOne: z.literal(false),
+    referencedRelation: z.literal("pets"),
+    referencedColumns: z.tuple([z.literal("id")]),
+  }),
+]);
+
 export type PublicAnimals = z.infer<typeof publicAnimalsSchema>;
+export type PublicReminderCategory = z.infer<
+  typeof publicReminderCategorySchema
+>;
 export type Json = z.infer<typeof jsonSchema>;
 export type PublicPetsRow = z.infer<typeof publicPetsRowSchema>;
 export type PublicPetsInsert = z.infer<typeof publicPetsInsertSchema>;
 export type PublicPetsUpdate = z.infer<typeof publicPetsUpdateSchema>;
+export type PublicReminderHistoryRow = z.infer<
+  typeof publicReminderHistoryRowSchema
+>;
+export type PublicReminderHistoryInsert = z.infer<
+  typeof publicReminderHistoryInsertSchema
+>;
+export type PublicReminderHistoryUpdate = z.infer<
+  typeof publicReminderHistoryUpdateSchema
+>;
+export type PublicReminderHistoryRelationships = z.infer<
+  typeof publicReminderHistoryRelationshipsSchema
+>;
+export type PublicRemindersRow = z.infer<typeof publicRemindersRowSchema>;
+export type PublicRemindersInsert = z.infer<typeof publicRemindersInsertSchema>;
+export type PublicRemindersUpdate = z.infer<typeof publicRemindersUpdateSchema>;
+export type PublicRemindersRelationships = z.infer<
+  typeof publicRemindersRelationshipsSchema
+>;

@@ -62,6 +62,100 @@ export type Database = {
         }
         Relationships: []
       }
+      reminder_history: {
+        Row: {
+          category: Database["public"]["Enums"]["reminder_category"]
+          completed_at: string
+          created_at: string
+          id: string
+          notes: string | null
+          pet_id: string
+          title: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["reminder_category"]
+          completed_at: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          pet_id: string
+          title: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["reminder_category"]
+          completed_at?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          pet_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminder_history_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reminders: {
+        Row: {
+          category: Database["public"]["Enums"]["reminder_category"]
+          created_at: string
+          date_completed: string | null
+          description: string | null
+          due_date: string
+          id: string
+          is_recurring: boolean
+          last_notified_at: string | null
+          pet_id: string
+          recurrence_interval: number | null
+          recurrence_period: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["reminder_category"]
+          created_at?: string
+          date_completed?: string | null
+          description?: string | null
+          due_date: string
+          id?: string
+          is_recurring?: boolean
+          last_notified_at?: string | null
+          pet_id: string
+          recurrence_interval?: number | null
+          recurrence_period?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["reminder_category"]
+          created_at?: string
+          date_completed?: string | null
+          description?: string | null
+          due_date?: string
+          id?: string
+          is_recurring?: boolean
+          last_notified_at?: string | null
+          pet_id?: string
+          recurrence_interval?: number | null
+          recurrence_period?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminders_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -79,6 +173,12 @@ export type Database = {
         | "horse"
         | "other"
         | "lizard"
+      reminder_category:
+        | "vaccination"
+        | "appointment"
+        | "medication"
+        | "test"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -215,6 +315,13 @@ export const Constants = {
         "horse",
         "other",
         "lizard",
+      ],
+      reminder_category: [
+        "vaccination",
+        "appointment",
+        "medication",
+        "test",
+        "other",
       ],
     },
   },
