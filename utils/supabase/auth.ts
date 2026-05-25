@@ -1,7 +1,7 @@
-// utils/supabase/auth.ts
+
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+
 
 /**
  * Fetches the current user or redirects to login if unauthenticated.
@@ -12,7 +12,8 @@ export const requireUser = async () => {
 
     const supabase = await createClient(cookieStore);
 
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    return user;
+    //Middleware handles redirection
+    return user!;
 };
