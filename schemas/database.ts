@@ -25,7 +25,7 @@ export const publicReminderCategorySchema = z.union([
   z.literal("other"),
 ]);
 
-export const jsonSchema = z.lazy(() =>
+export const jsonSchema: z.ZodTypeAny = z.lazy(() =>
   z
     .union([
       z.string(),
