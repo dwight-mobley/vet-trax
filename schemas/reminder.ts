@@ -1,5 +1,5 @@
 import {z} from "zod";
-import { publicRemindersInsertSchema } from "./database"
+import { publicReminderHistoryInsertSchema, publicRemindersInsertSchema } from "./database"
 import { Pet } from "./pet";
 
 
@@ -46,6 +46,7 @@ export type CreateReminderFormData = z.output<typeof CreateReminderFormSchema>;
 
 export type ReminderUpdate = Partial<CreateReminderFormInput> & { id: string };
 
-export type Reminder = z.infer<typeof publicRemindersInsertSchema> & { pet: Pet | null };
+export type Reminder = z.infer<typeof publicRemindersInsertSchema> & { pet: Pet | null, completed_at: string | null | undefined };
+export type ReminderHistory = z.infer<typeof publicReminderHistoryInsertSchema> & { pet: Pet | null, date_completed: string | null, due_date: string | null, completed_at: string | null | undefined };
 
 
