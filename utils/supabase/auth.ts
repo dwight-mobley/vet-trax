@@ -9,15 +9,10 @@ import { redirect } from "next/navigation";
  */
 export const requireUser = async () => {
     const cookieStore = await cookies();
-   
+
     const supabase = await createClient(cookieStore);
 
     const { data: { user }, error } = await supabase.auth.getUser();
-
-    // If there is no user, instantly kick them to the login page
-    if (error || !user) {
-        redirect("/login");
-    }
 
     return user;
 };
