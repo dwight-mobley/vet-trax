@@ -22,7 +22,7 @@ export async function updateSession(request: NextRequest) {
   )
 
   const {data:{user}} = await supabase.auth.getUser()
-  const isAuthRoute = request.nextUrl.pathname.startsWith('/auth')
+  const isAuthRoute = request.nextUrl.pathname.startsWith('/auth') || request.nextUrl.pathname.startsWith('/api/cron')
   if(!isAuthRoute && !user){
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
