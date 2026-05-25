@@ -131,3 +131,15 @@ const {pet_id, title, category, description} = reminder;
   }
   return { success: true, message: "Reminder marked as complete." };
 };
+
+//REMINDER HISTORY
+export const deleteReminderHistory = async (reminderId: string) => {
+  const supabase = await createClient(await cookies());
+  const { error, status } = await supabase.from("reminder_history").delete().eq("id", reminderId);
+  console.log("Delete result:", { error, status });
+  if (error) {
+    console.log("Supabase delete error:", error);
+    return { success: false, message: "Failed to delete reminder." };
+  }
+  return { success: true, message: "Reminder deleted successfully." };
+};

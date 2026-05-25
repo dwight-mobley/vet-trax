@@ -5,7 +5,7 @@ interface Reminder {
 }
 
 export function getPetReminderEmailHtml(reminders: Reminder[]): string {
- 
+
   const reminderRowsHtml = reminders
     .map((r) => `
       <tr style="border-bottom: 1px solid #CBD5E1;">
@@ -68,7 +68,7 @@ export function getPetReminderEmailHtml(reminders: Reminder[]): string {
                   <table role="presentation" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
                     <tr>
                       <td align="center" style="padding: 10px 0;">
-                        <a href="https://vet-trax.dwight-mobley.com/dashboard" style="display: inline-block; background-color: #F97316; color: #FFFFFF; font-weight: 600; font-size: 15px; padding: 14px 36px; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(249, 115, 22, 0.2); transition: background-color 0.2s ease;">
+                        <a href=${process.env.NEXT_PUBLIC_DASHBOARD_URL} style="display: inline-block; background-color: #F97316; color: #FFFFFF; font-weight: 600; font-size: 15px; padding: 14px 36px; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(249, 115, 22, 0.2); transition: background-color 0.2s ease;">
                           Manage Reminders Dashboard
                         </a>
                       </td>
