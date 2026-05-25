@@ -1,12 +1,12 @@
 "use client";
 
-import { deleteReminder } from "@/actions/reminder-actions";
+import { deleteReminder, deleteReminderHistory } from "@/actions/reminder-actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/context/ModalContext";
 
 
-function DeleteReminderButton ({ reminderId }: { reminderId: string }) {
+function DeleteReminderButton ({ reminderId, history=false }: { reminderId: string, history:boolean }) {
   const router = useRouter()
   const {showError, showSuccess} = useModal()
   const [open, setOpen] = useState(false);
@@ -15,14 +15,23 @@ function DeleteReminderButton ({ reminderId }: { reminderId: string }) {
   async function handleDelete() {
     console.log("Deleting Reminder")
     setLoading(true);
-    const {success, message} = await deleteReminder(reminderId);
+    let success, message;
+    if(history){
+      const {success:historySuccess, message:historyMessage} = await deleteReminderHistory(reminderId)
+      success = historySuccess;
+      message= historyMessage;
+    }else{
+    const {success:reminderSuccess, message:reminderMessage} = await deleteReminder(reminderId);
+    success = reminderSuccess;
+    message = reminderMessage;
+    }
     if(!success){
       setLoading(false);
       showError('Failed to delete reminder!', message);
     }
     setLoading(false);
     showSuccess('Reminder Deleted', message)
-    router.push('/reminders')
+    router.push(history? '/reminders/completed' : '/reminders')
   }
 
   return (

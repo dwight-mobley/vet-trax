@@ -10,7 +10,7 @@ export default async function EditPetPage({ params }: { params: { id: string } }
   const userId = (await requireUser()).id
   const pets = await getUserPets(userId);
   const reminder = await getReminderById(id);
- 
+
 
   if (!reminder) {
     return <p className="text-status-critical">Pet not found.</p>;
@@ -27,7 +27,7 @@ export default async function EditPetPage({ params }: { params: { id: string } }
       <h1 className="text-2xl font-semibold mb-6">Edit {reminder.pet!.name}</h1>
 
 
-      <CreateReminderForm pets={pets} reminder={reminder} />
+      <CreateReminderForm pets={pets} reminder={{...reminder, completed_at:null} } />
     </div>
   );
 }
