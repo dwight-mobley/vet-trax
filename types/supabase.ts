@@ -14,6 +14,65 @@ export type Database = {
   }
   public: {
     Tables: {
+      medical_records: {
+        Row: {
+          coggins: boolean
+          createdAt: string
+          date: string
+          description: string
+          height: number | null
+          id: string
+          notes: string | null
+          pet_id: string
+          trimmed: boolean
+          updatedAt: string | null
+          vet: string | null
+          weight: number | null
+          wormed: boolean
+          yearly_vaccines: boolean
+        }
+        Insert: {
+          coggins: boolean
+          createdAt?: string
+          date: string
+          description: string
+          height?: number | null
+          id?: string
+          notes?: string | null
+          pet_id: string
+          trimmed: boolean
+          updatedAt?: string | null
+          vet?: string | null
+          weight?: number | null
+          wormed: boolean
+          yearly_vaccines: boolean
+        }
+        Update: {
+          coggins?: boolean
+          createdAt?: string
+          date?: string
+          description?: string
+          height?: number | null
+          id?: string
+          notes?: string | null
+          pet_id?: string
+          trimmed?: boolean
+          updatedAt?: string | null
+          vet?: string | null
+          weight?: number | null
+          wormed?: boolean
+          yearly_vaccines?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_records_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pets: {
         Row: {
           birth_date: string | null

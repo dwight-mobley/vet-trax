@@ -37,6 +37,67 @@ export const jsonSchema: z.ZodTypeAny = z.lazy(() =>
     .nullable(),
 );
 
+export const publicMedicalRecordsRowSchema = z.object({
+  coggins: z.boolean(),
+  createdAt: z.string(),
+  date: z.string(),
+  description: z.string(),
+  height: z.number().nullable(),
+  id: z.string(),
+  notes: z.string().nullable(),
+  pet_id: z.string(),
+  trimmed: z.boolean(),
+  updatedAt: z.string().nullable(),
+  vet: z.string().nullable(),
+  weight: z.number().nullable(),
+  wormed: z.boolean(),
+  yearly_vaccines: z.boolean(),
+});
+
+export const publicMedicalRecordsInsertSchema = z.object({
+  coggins: z.boolean(),
+  createdAt: z.string().optional(),
+  date: z.string(),
+  description: z.string(),
+  height: z.number().optional().nullable(),
+  id: z.string().optional(),
+  notes: z.string().optional().nullable(),
+  pet_id: z.string(),
+  trimmed: z.boolean(),
+  updatedAt: z.string().optional().nullable(),
+  vet: z.string().optional().nullable(),
+  weight: z.number().optional().nullable(),
+  wormed: z.boolean(),
+  yearly_vaccines: z.boolean(),
+});
+
+export const publicMedicalRecordsUpdateSchema = z.object({
+  coggins: z.boolean().optional(),
+  createdAt: z.string().optional(),
+  date: z.string().optional(),
+  description: z.string().optional(),
+  height: z.number().optional().nullable(),
+  id: z.string().optional(),
+  notes: z.string().optional().nullable(),
+  pet_id: z.string().optional(),
+  trimmed: z.boolean().optional(),
+  updatedAt: z.string().optional().nullable(),
+  vet: z.string().optional().nullable(),
+  weight: z.number().optional().nullable(),
+  wormed: z.boolean().optional(),
+  yearly_vaccines: z.boolean().optional(),
+});
+
+export const publicMedicalRecordsRelationshipsSchema = z.tuple([
+  z.object({
+    foreignKeyName: z.literal("medical_records_pet_id_fkey"),
+    columns: z.tuple([z.literal("pet_id")]),
+    isOneToOne: z.literal(false),
+    referencedRelation: z.literal("pets"),
+    referencedColumns: z.tuple([z.literal("id")]),
+  }),
+]);
+
 export const publicPetsRowSchema = z.object({
   birth_date: z.string().nullable(),
   breed: z.string().nullable(),
@@ -188,6 +249,18 @@ export type PublicReminderCategory = z.infer<
   typeof publicReminderCategorySchema
 >;
 export type Json = z.infer<typeof jsonSchema>;
+export type PublicMedicalRecordsRow = z.infer<
+  typeof publicMedicalRecordsRowSchema
+>;
+export type PublicMedicalRecordsInsert = z.infer<
+  typeof publicMedicalRecordsInsertSchema
+>;
+export type PublicMedicalRecordsUpdate = z.infer<
+  typeof publicMedicalRecordsUpdateSchema
+>;
+export type PublicMedicalRecordsRelationships = z.infer<
+  typeof publicMedicalRecordsRelationshipsSchema
+>;
 export type PublicPetsRow = z.infer<typeof publicPetsRowSchema>;
 export type PublicPetsInsert = z.infer<typeof publicPetsInsertSchema>;
 export type PublicPetsUpdate = z.infer<typeof publicPetsUpdateSchema>;
