@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { redirect } from 'next/dist/server/api-utils'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
@@ -26,9 +27,10 @@ export async function updateSession(request: NextRequest) {
   if(!isAuthRoute && !user){
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
-  if(isAuthRoute && user){
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  if(user && request.nextUrl.pathname.startsWith('/auth/login')){
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
+
   return supabaseResponse
 }
 

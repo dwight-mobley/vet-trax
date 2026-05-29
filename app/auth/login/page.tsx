@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
+import { requireUser } from "@/utils/supabase/auth";
 
 
-export default function LoginPage() {
+export default  function LoginPage() {
   const router = useRouter();
   const supabase = createClient();
-
+ 
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -100,12 +102,12 @@ export default function LoginPage() {
                 Password
               </label>
               {!isSignUp && (
-                <button
+                <Link href="/auth/password-reset"
                   type="button"
                   className="text-sm font-medium text-secondary hover:text-secondary-dark transition-colors"
                 >
                   Forgot password?
-                </button>
+                </Link>
               )}
             </div>
             <input
