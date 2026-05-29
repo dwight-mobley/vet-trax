@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/context/ModalContext";
 import { AuthError } from "@supabase/supabase-js";
-import { updatePassword } from "./actions";
+import { updatePassword } from "@/actions/auth";
 
 
 //Checkmark

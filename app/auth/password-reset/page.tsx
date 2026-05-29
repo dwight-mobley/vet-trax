@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { resetPassword } from "./actions";
+import { resetPassword } from "@/actions/auth";
 
 import { useRouter } from "next/navigation";
 import { useModal } from "@/context/ModalContext";

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
-import { requireUser } from "@/utils/supabase/auth";
+
 
 
 export default  function LoginPage() {
