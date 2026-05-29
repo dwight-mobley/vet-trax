@@ -1,65 +1,134 @@
-import Image from "next/image";
+import { getUserPets } from '@/data-access/pets';
+import { getUserReminders } from '@/data-access/reminders';
+import { requireUser } from '@/utils/supabase/auth';
+import Link from 'next/link';
+import React from 'react';
 
-export default function Home() {
+async function DashboardPage() {
+  const user = await requireUser();
+  const reminders = await getUserReminders(user.id);
+  const pets = await getUserPets(user.id);
+
+  const upcomingReminders = reminders
+    .filter((reminder) => {
+      const reminderDate = new Date(reminder.due_date);
+      const now = new Date();
+      const thirtyDaysFromNow = new Date();
+      thirtyDaysFromNow.setDate(now.getDate() + 30);
+      return reminderDate <= thirtyDaysFromNow;
+    })
+    .sort(
+      (a, b) =>
+        new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+    );
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-background p-6 md:p-8 font-sans">
+      <div className="max-w-6xl mx-auto space-y-8">
+
+        {/* Header Section */}
+        <header>
+          <h1 className="text-3xl font-bold text-text-primary">
+            Welcome back!
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-text-secondary mt-1">
+            Here is what's happening with your pets today.
           </p>
+        </header>
+
+        {/* Main Dashboard Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          {/* Left Column: Pets Overview (Spans 2 columns on large screens) */}
+          <div className="lg:col-span-2 space-y-6">
+            <section className="bg-background-paper rounded-large p-6 shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-text-primary">Your Pets</h2>
+                <button className="text-sm font-medium text-primary hover:text-primary-dark transition-colors">
+                  + Add Pet
+                </button>
+              </div>
+
+              {pets.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {pets.map((pet) => (
+                    <Link href={`/pets/${pet.id}`}
+                      key={pet.id}
+                      className="p-4 rounded-medium border border-gray-100 hover:border-primary-light transition-colors flex items-center space-x-4"
+                    >
+                      <div className="h-12 w-12 rounded-full bg-primary-light/20 flex items-center justify-center text-primary font-bold text-lg">
+                        {pet.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-text-primary">{pet.name}</h3>
+                        <p className="text-sm text-text-secondary capitalize">{pet.breed || 'Pet'}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-text-secondary">
+                  <p>You haven't added any pets yet.</p>
+                </div>
+              )}
+            </section>
+          </div>
+
+          {/* Right Column: Upcoming Reminders */}
+          <div className="space-y-6">
+            <section className="bg-background-paper rounded-large p-6 shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-text-primary">Upcoming</h2>
+                <span className="bg-secondary-light/20 text-secondary-dark text-xs font-bold px-2 py-1 rounded-small">
+                  30 Days
+                </span>
+              </div>
+
+              {upcomingReminders.length > 0 ? (
+                <ul className="space-y-4">
+                  {upcomingReminders.map((reminder) => {
+                    // Calculate if it's overdue, due soon (warning), or standard (info)
+                    const isOverdue = new Date(reminder.due_date) < new Date();
+                    const statusColor = isOverdue ? 'text-status-critical' : 'text-status-warning';
+                    const dotColor = isOverdue ? 'bg-status-critical' : 'bg-status-warning';
+
+                    return (
+                      <li
+                        key={reminder.id}
+                        className="flex items-start p-3 rounded-medium bg-background hover:bg-gray-50 transition-colors"
+                      >
+                        <div className={`mt-1.5 h-2 w-2 rounded-full ${dotColor} shrink-0`} />
+                        <div className="ml-3 flex gap-3">
+                          <p className="text-sm font-medium text-text-primary">
+                            {reminder.pet.name}
+                          </p>
+                          <p className="text-sm font-medium text-text-primary">
+                            {reminder.title}
+                          </p>
+                          <p className={`text-xs mt-0.5 ${isOverdue ? statusColor : 'text-text-secondary'}`}>
+                            {new Date(reminder.due_date).toLocaleDateString(undefined, {
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <div className="text-center py-8 bg-background rounded-medium border border-dashed border-gray-200">
+                  <p className="text-sm text-text-secondary">You're all caught up!</p>
+                  <p className="text-xs text-text-disabled mt-1">No reminders for the next 30 days.</p>
+                </div>
+              )}
+            </section>
+          </div>
+
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }
+
+export default DashboardPage;

@@ -1,19 +1,22 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
-import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
+import { requireUser } from '@/utils/supabase/auth';
+import { redirect } from 'next/navigation'
+import { createServerClient } from '@supabase/ssr';
+import { createAdminClient } from '@/utils/supabase/admin';
 
 export async function registerUser(formData: FormData, url: string) {
     const supabase = await createClient(await cookies());
     const { data, error } = await supabase.auth.signUp({
         email: formData.get('email') as string,
         password: formData.get('password') as string,
-        options: {            
+        options: {
             emailRedirectTo: `${url}/auth/verify-success`,
         },
     })
-   
+
     if (error) {
         return error.message
     }
@@ -28,7 +31,7 @@ export async function login(formData: FormData) {
 
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
-    if(error){
+    if (error) {
         return error.message;
     }
     return null
@@ -56,4 +59,18 @@ export const updatePassword = async (data: FormData) => {
         return { error: error.message };
     }
     return { error: null }
+}
+
+export const deleteAccount = async () => {
+    //Get current user
+    const user = await requireUser();
+  
+    const supabase = await createAdminClient(await cookies());
+    const { error } = await supabase.auth.admin.deleteUser(user.id);
+   
+    if (error) {
+        return error.message
+    }        
+    await supabase.auth.signOut();
+    redirect('/auth/login')
 }

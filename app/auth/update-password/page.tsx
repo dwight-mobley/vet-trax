@@ -65,7 +65,7 @@ export default function UpdatePassword() {
                 return;
             }
             showSuccess('Password Changed', 'Your password was successfully changed.')
-            router.push('/dashboard');
+            router.push('/');
         } catch (err) {
             showError('Error Resetting Password', 'Please try again.')
         }
