@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+
 import {
   LayoutDashboard,
   PawPrint,
@@ -27,12 +28,13 @@ const NAV_ITEMS = [
 export default function DashboardLayoutClient({ user, children }: {user:User | null; children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-
-
+  const params = useSearchParams();  
+  const token_hash = params.get('token_hash');
+ 
 
   return (
     <div className="min-h-screen bg-background flex overflow-y-scroll">
-      {user && <>
+      {user && !token_hash && <>
       {/*
         ========================================
         DESKTOP SIDEBAR
