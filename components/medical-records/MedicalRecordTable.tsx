@@ -23,8 +23,6 @@ export default function MedicalRecordsTable({records}: {records:MedicalRecordWit
   return (
     <div className="p-6 bg-background min-h-screen font-sans">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold text-text-primary mb-6">Medical Records</h2>
-
         {/* Table Container using your custom theme variables */}
         <div className="overflow-hidden bg-background-paper rounded-large shadow-sm border border-text-disabled/30">
           <div className="overflow-x-auto">

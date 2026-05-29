@@ -8,7 +8,6 @@ import { requireUser } from "@/utils/supabase/auth";
 import { PetCreateFormSchema, type PetCreateForm, PetUpdateFormSchema, type PetUpdateForm } from "@/schemas/pet";
 
 export async function addPet(formData: PetCreateForm) {
-  console.log("Adding New Pet with data:", formData);
   // 1. Securely get the authenticated user
   const user = await requireUser();
   const supabase = createClient(await cookies());

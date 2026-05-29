@@ -14,7 +14,7 @@ const animalOptions: PublicAnimals[] = ["cat", "cow", "dog", "rabbit", "hamster"
 
 export default function AddPetForm() {
   const { showSuccess, showError } = useModal();
-  
+
   const {
     register,
     handleSubmit,
@@ -29,14 +29,15 @@ export default function AddPetForm() {
       breed: "",
       color: "",
       birth_date: "",
-      weight: undefined,
-      height: undefined,
+      weight: null,
+      height: null,
       notes: "",
       image: "",
     },
   });
 
   async function onSubmit(data: PetCreateForm) {
+    
     const { success, message } = await addPet(data);
     if (!success) {
       showError();
