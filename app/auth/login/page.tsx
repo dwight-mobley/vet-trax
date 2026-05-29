@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
+import { login, registerUser } from "@/actions/auth";
 
 
 
@@ -21,25 +22,17 @@ export default  function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-
     try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${location.origin}/auth/callback?next=${'/auth/verify-success'}`,
-          },
-        });
-        if (error) throw error;
+      if (isSignUp) {       
+        const registerError = await registerUser(new FormData(e.target), location.origin)
+        if (registerError) {
+         return setError(registerError)
+        }
        //Redirect to success page
         router.push('/auth/register/success')
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
+        const loginError = await login(new FormData(e.target))
+        if (loginError) return setError(loginError);
         router.push("/");
         router.refresh();
       }
@@ -87,6 +80,7 @@ export default  function LoginPage() {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -113,6 +107,7 @@ export default  function LoginPage() {
             <input
               id="password"
               type="password"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"

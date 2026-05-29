@@ -4,6 +4,22 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 
+export async function registerUser(formData: FormData, url: string) {
+    const supabase = await createClient(await cookies());
+    const { data, error } = await supabase.auth.signUp({
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+        options: {            
+            emailRedirectTo: `${url}/auth/verify-success`,
+        },
+    })
+   
+    if (error) {
+        return error.message
+    }
+    return null
+}
+
 export async function login(formData: FormData) {
     const cookieStore = await cookies();
     const supabase = await createClient(cookieStore)
@@ -12,8 +28,10 @@ export async function login(formData: FormData) {
 
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) redirect('/error')
-    redirect('/dashboard')
+    if(error){
+        return error.message;
+    }
+    return null
 }
 
 export const resetPassword = async (data: FormData, url: string) => {

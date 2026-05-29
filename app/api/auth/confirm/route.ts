@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
       token_hash,
     })
     if (!error) {
+      console.log('Valid token redirecting to:', redirectTo)
       return NextResponse.redirect(redirectTo)
     }
   }
