@@ -2,14 +2,19 @@
 
 import { useState } from "react";
 import { deletePet } from "@/actions/pet-actions";
+import { useRouter } from "next/navigation";
+
 
 export const DeletePetButton = ({ petId }: { petId: string }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   async function handleDelete() {
     setLoading(true);
     await deletePet(petId);
+    setLoading(false);
+    router.push('/pets')
   }
 
   return (
