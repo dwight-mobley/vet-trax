@@ -2,10 +2,19 @@
 import { MedicalRecordCreateForm, MedicalRecordCreateFormSchema, MedicalRecordUpdateForm, MedicalRecordUpdateFormSchema } from "@/schemas/medical-records";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMedicalRecord } from "@/actions/medical-record";
+import { addMedicalRecord, editMedicalRecord } from "@/actions/medical-record";
+import { useModal } from "@/context/ModalContext";
+import { useRouter } from "next/navigation";
 
-export default function MedicalRecordForm({ initialData, pets }: { initialData?: Partial<MedicalRecordUpdateForm>; pets: Array<{ id: string; name: string }> }) {
-  console.log(initialData)
+type FormProps = {
+  initialData?: Partial<MedicalRecordUpdateForm>;
+  pets: Array<{ id: string; name: string }>;
+  recordId?: string;
+};
+
+export default function MedicalRecordForm({ initialData, pets, recordId }: FormProps) {
+  const { showSuccess, showError } = useModal();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -28,18 +37,34 @@ export default function MedicalRecordForm({ initialData, pets }: { initialData?:
   });
 
   const onSubmit = async (data: MedicalRecordCreateForm) => {
-    const validated = MedicalRecordCreateFormSchema.safeParse(data);
-    console.log(validated);
-    console.log(data);
-    const { success, message } = await addMedicalRecord(data);
-    if (!success) {
-      console.log(message);
+    try {
+      const validated = MedicalRecordCreateFormSchema.safeParse(data);
+      if (!validated) return;
+      //Handle Update
+      if (recordId) {
+        const result = await editMedicalRecord(recordId as string, data);
+        if (!result?.success) {
+          showError("Error Updating Record", result?.message);
+          return;
+        }
+        return;
+      }
+      const { success, message } = await addMedicalRecord(data);
+      if (!success) {
+        showError("Error Updating Record", message);
+      }
+    } catch (err) {
+      console.log(err);
+      showError("Unknown Error", "An Unknown Error Occurred");
+    } finally {
+      showSuccess("Record Updated", initialData?.pet_id ? "Record Updated Successfully" : "Record Saved Successfully");
+      router.prefetch("/records");
+      router.push("/records");
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit, (err) => console.log(err))} className="space-y-8 bg-background-paper p-6 rounded-large shadow">
-
       {/* Section: Basic Information */}
       <div>
         <h2 className="text-lg font-semibold text-text-primary mb-4">Basic Information</h2>
@@ -90,24 +115,14 @@ export default function MedicalRecordForm({ initialData, pets }: { initialData?:
           {/* WEIGHT */}
           <div>
             <label className="block text-sm font-medium text-text-primary mb-1">Weight (lbs, optional)</label>
-            <input
-              type="number"
-              step="0.1"
-              {...register("weight", { valueAsNumber: true })}
-              className="w-full border border-text-disabled rounded-medium px-3 py-2"
-            />
+            <input type="number" step="0.1" {...register("weight", { valueAsNumber: true })} className="w-full border border-text-disabled rounded-medium px-3 py-2" />
             {errors.weight && <p className="text-status-critical text-sm mt-1">{errors.weight.message}</p>}
           </div>
 
           {/* HEIGHT */}
           <div>
             <label className="block text-sm font-medium text-text-primary mb-1">Height (hands, optional)</label>
-            <input
-              type="number"
-              step="0.1"
-              {...register("height", { valueAsNumber: true })}
-              className="w-full border border-text-disabled rounded-medium px-3 py-2"
-            />
+            <input type="number" step="0.1" {...register("height", { valueAsNumber: true })} className="w-full border border-text-disabled rounded-medium px-3 py-2" />
             {errors.height && <p className="text-status-critical text-sm mt-1">{errors.height.message}</p>}
           </div>
 
@@ -122,11 +137,7 @@ export default function MedicalRecordForm({ initialData, pets }: { initialData?:
                 ["yearly_vaccines", "Yearly Vaccines"],
               ].map(([key, label]) => (
                 <label key={key} className="flex items-center gap-2 text-text-primary cursor-pointer">
-                  <input
-                    type="checkbox"
-                    {...register(key as "coggins" | "trimmed" | "wormed" | "yearly_vaccines")}
-                    className="w-4 h-4 text-primary border-text-disabled rounded focus:ring-primary"
-                  />
+                  <input type="checkbox" {...register(key as "coggins" | "trimmed" | "wormed" | "yearly_vaccines")} className="w-4 h-4 text-primary border-text-disabled rounded focus:ring-primary" />
                   {label}
                 </label>
               ))}
@@ -148,11 +159,7 @@ export default function MedicalRecordForm({ initialData, pets }: { initialData?:
       </div>
 
       {/* Submit */}
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-primary text-primary-contrast font-medium py-2.5 rounded-medium hover:bg-primary-dark transition disabled:bg-primary-light disabled:cursor-not-allowed"
-      >
+      <button type="submit" disabled={isSubmitting} className="w-full bg-primary text-primary-contrast font-medium py-2.5 rounded-medium hover:bg-primary-dark transition disabled:bg-primary-light disabled:cursor-not-allowed">
         {isSubmitting ? "Saving..." : "Save Record"}
       </button>
     </form>

@@ -38,7 +38,7 @@ export default function CreateReminderForm({ pets, reminder }: Props) {
       is_recurring: reminder?.is_recurring || false,
       due_date: reminder?.due_date,
       recurrence_interval: reminder?.recurrence_interval || null,
-      recurrence_period: reminder?.recurrence_period || "days"
+      recurrence_period: reminder?.recurrence_period || "days",
     },
   });
 
@@ -58,20 +58,20 @@ export default function CreateReminderForm({ pets, reminder }: Props) {
 
   const onSubmit = async (data: CreateReminderFormInput | ReminderUpdate) => {
     if (reminder) {
-      const { success,message } = await UpdateReminder({...data, id:reminder.id} as ReminderUpdate);
-      if(!success){
-        showError('Failed To Update Reminder', message)
+      const { success, message } = await UpdateReminder({ ...data, id: reminder.id } as ReminderUpdate);
+      if (!success) {
+        showError("Failed To Update Reminder", message);
         return;
       }
-      showSuccess('Updated Reminder', message)
+      showSuccess("Updated Reminder", message);
     } else {
       const { success, message } = await AddReminders(data as CreateReminderFormInput);
       if (!success) {
         showError("Error Adding Reminder(s)", message);
       }
       showSuccess("Reminders Created!", `Successfully scheduled for ${data.pet_ids!.length} pet(s).`);
-      router.push("/reminders");
     }
+    router.push("/reminders");
   };
 
   return (
@@ -81,7 +81,6 @@ export default function CreateReminderForm({ pets, reminder }: Props) {
         <label className="mb-2 block text-sm font-semibold text-text-primary">Apply to which pets?</label>
         {reminder && <small className="text-red-600">Pets cannot be changed on update. You must delete the reminder and make a new one.</small>}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-
           {pets.map((pet) => {
             const isSelected = selectedPets.includes(pet.id);
             return (
