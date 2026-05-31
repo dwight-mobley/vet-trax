@@ -1,7 +1,12 @@
+import { requireUser } from '@/utils/supabase/auth'
 import Link from 'next/link'
 import React from 'react'
 
-function Footer() {
+async function Footer() {
+  const user = await requireUser();
+  if(user?.id){
+    return null;
+  }
   return (
       <footer className="w-full bg-primary-dark p-3 text-center">
         <h2 className="text-2xl font-bold text-primary-contrast mb-3">Ready to streamline your pet care?</h2>
