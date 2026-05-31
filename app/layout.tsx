@@ -3,6 +3,7 @@ import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import LandingPageNavbar from "@/components/layout/LandingPageNavbar";
 import Footer from "@/components/layout/Footer";
+import { ModalProvider } from "@/context/ModalContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,7 +30,10 @@ export default async function RootLayout({
     <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-screen flex flex-col">
         <LandingPageNavbar/>
-       {children}
+        <ModalProvider>
+          {children}
+        </ModalProvider>
+
        <Footer/>
       </body>
     </html>
