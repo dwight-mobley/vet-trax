@@ -18,7 +18,7 @@ import { User } from "@supabase/supabase-js";
 
 
 const NAV_ITEMS = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Pets", href: "/pets", icon: PawPrint },
   { name: "Reminders", href: "/reminders", icon: Calendar },
   { name: "Medical Records", href: "/records", icon: Activity },
@@ -28,9 +28,9 @@ const NAV_ITEMS = [
 export default function DashboardLayoutClient({ user, children }: {user:User | null; children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const params = useSearchParams();  
+  const params = useSearchParams();
   const token_hash = params.get('token_hash');
- 
+
 
   return (
     <div className="min-h-screen bg-background flex overflow-y-scroll">

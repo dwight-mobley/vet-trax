@@ -5,6 +5,8 @@
   /* Typography */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
+  /* Hero Image */
+   --background-image-hero: url('/hero.png');
   /* Clinical Teal (Primary) */
   --color-primary: #0F766E;
   --color-primary-light: #2DD4BF;
