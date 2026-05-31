@@ -22,10 +22,10 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const AuthenticatedRoutes = ['/authenticated/*']
+  const publicRoutes = ['/auth', '/api/cron', 'api/auth/confirm']
   const {data:{user}} = await supabase.auth.getUser()
 
-  if(AuthenticatedRoutes.includes(request.nextUrl.pathname) && !user){
+  if(!publicRoutes.some(route => request.nextUrl.pathname.startsWith(route)) && !user){
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
   if(user && request.nextUrl.pathname.startsWith('/auth/login')){
