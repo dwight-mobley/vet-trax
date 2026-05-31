@@ -1,6 +1,7 @@
 import { MedicalRecordWithPet } from '@/schemas/medical-records';
 import {dateFormatter} from '@/utils/tools'
 import Link from 'next/link';
+import DeleteMedicalRecordButton from '../ui/DeleteMedicalRecordButton';
 
 
 
@@ -22,7 +23,7 @@ const StatusBadge = ({ active, label }: { active: boolean; label: string }) => (
 export default function MedicalRecordsTable({records}: {records:MedicalRecordWithPet[]}) {
   return (
     <div className="p-6 bg-background min-h-screen font-sans">
-      <div className="max-w-6xl mx-auto">
+      <div className="mx-auto">
         {/* Table Container using your custom theme variables */}
         <div className="overflow-hidden bg-background-paper rounded-large shadow-sm border border-text-disabled/30">
           <div className="overflow-x-auto">
@@ -36,7 +37,7 @@ export default function MedicalRecordsTable({records}: {records:MedicalRecordWit
                   <th scope="col" className="px-6 py-4 font-semibold">Description</th>
                   <th scope="col" className="px-6 py-4 font-semibold">Vet</th>
                   <th scope="col" className="px-6 py-4 font-semibold">Weight</th>
-                  <th scope="col" className="px-6 py-4 font-semibold rounded-tr-large">Checklist</th>
+                  <th scope="col" className="px-6 py-4 font-semibold ">Checklist</th>
                   <th scope="col" className="px-6 py-4 font-semibold rounded-tr-large"></th>
                 </tr>
               </thead>
@@ -71,8 +72,10 @@ export default function MedicalRecordsTable({records}: {records:MedicalRecordWit
                         <StatusBadge active={record.yearly_vaccines} label="Vaccines" />
                       </div>
                     </td>
-                    <td>
+                    <td className='flex gap-3  justify-center items-center p-4'>
                       <Link href={`/records/${record.id}`}>View</Link>
+                      |
+                      <DeleteMedicalRecordButton recordId={record.id as string} />
                     </td>
                   </tr>
                 ))}
