@@ -11,7 +11,7 @@ import { login, registerUser } from "@/actions/auth";
 export default  function LoginPage() {
   const router = useRouter();
   const supabase = createClient();
- 
+
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +23,7 @@ export default  function LoginPage() {
     setIsLoading(true);
     setError(null);
     try {
-      if (isSignUp) {       
+      if (isSignUp) {
         const registerError = await registerUser(new FormData(e.target), location.origin)
         if (registerError) {
          return setError(registerError)
@@ -33,7 +33,7 @@ export default  function LoginPage() {
       } else {
         const loginError = await login(new FormData(e.target))
         if (loginError) return setError(loginError);
-        router.push("/");
+        router.push("/dashboard");
         router.refresh();
       }
     } catch (err) {

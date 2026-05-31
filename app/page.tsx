@@ -1,134 +1,86 @@
-import { getUserPets } from '@/data-access/pets';
-import { getUserReminders } from '@/data-access/reminders';
-import { requireUser } from '@/utils/supabase/auth';
-import Link from 'next/link';
-import React from 'react';
+import Link from "next/link";
+import { PawPrint, FileText, Bell, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
-async function DashboardPage() {
-  const user = await requireUser();
-  const reminders = await getUserReminders(user.id);
-  const pets = await getUserPets(user.id);
-
-  const upcomingReminders = reminders
-    .filter((reminder) => {
-      const reminderDate = new Date(reminder.due_date);
-      const now = new Date();
-      const thirtyDaysFromNow = new Date();
-      thirtyDaysFromNow.setDate(now.getDate() + 30);
-      return reminderDate <= thirtyDaysFromNow;
-    })
-    .sort(
-      (a, b) =>
-        new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-    );
-
+export default function Home() {
   return (
-    <div className="min-h-screen bg-background p-6 md:p-8 font-sans">
-      <div className="max-w-6xl mx-auto space-y-8">
-
-        {/* Header Section */}
-        <header>
-          <h1 className="text-3xl font-bold text-text-primary">
-            Welcome back!
-          </h1>
-          <p className="text-text-secondary mt-1">
-            Here is what's happening with your pets today.
-          </p>
-        </header>
-
-        {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-          {/* Left Column: Pets Overview (Spans 2 columns on large screens) */}
-          <div className="lg:col-span-2 space-y-6">
-            <section className="bg-background-paper rounded-large p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-text-primary">Your Pets</h2>
-                <button className="text-sm font-medium text-primary hover:text-primary-dark transition-colors">
-                  + Add Pet
-                </button>
-              </div>
-
-              {pets.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {pets.map((pet) => (
-                    <Link href={`/pets/${pet.id}`}
-                      key={pet.id}
-                      className="p-4 rounded-medium border border-gray-100 hover:border-primary-light transition-colors flex items-center space-x-4"
-                    >
-                      <div className="h-12 w-12 rounded-full bg-primary-light/20 flex items-center justify-center text-primary font-bold text-lg">
-                        {pet.name.charAt(0)}
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-text-primary">{pet.name}</h3>
-                        <p className="text-sm text-text-secondary capitalize">{pet.breed || 'Pet'}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-text-secondary">
-                  <p>You haven't added any pets yet.</p>
-                </div>
-              )}
-            </section>
-          </div>
-
-          {/* Right Column: Upcoming Reminders */}
-          <div className="space-y-6">
-            <section className="bg-background-paper rounded-large p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-text-primary">Upcoming</h2>
-                <span className="bg-secondary-light/20 text-secondary-dark text-xs font-bold px-2 py-1 rounded-small">
-                  30 Days
-                </span>
-              </div>
-
-              {upcomingReminders.length > 0 ? (
-                <ul className="space-y-4">
-                  {upcomingReminders.map((reminder) => {
-                    // Calculate if it's overdue, due soon (warning), or standard (info)
-                    const isOverdue = new Date(reminder.due_date) < new Date();
-                    const statusColor = isOverdue ? 'text-status-critical' : 'text-status-warning';
-                    const dotColor = isOverdue ? 'bg-status-critical' : 'bg-status-warning';
-
-                    return (
-                      <li
-                        key={reminder.id}
-                        className="flex items-start p-3 rounded-medium bg-background hover:bg-gray-50 transition-colors"
-                      >
-                        <div className={`mt-1.5 h-2 w-2 rounded-full ${dotColor} shrink-0`} />
-                        <div className="ml-3 flex gap-3">
-                          <p className="text-sm font-medium text-text-primary">
-                            {reminder.pet.name}
-                          </p>
-                          <p className="text-sm font-medium text-text-primary">
-                            {reminder.title}
-                          </p>
-                          <p className={`text-xs mt-0.5 ${isOverdue ? statusColor : 'text-text-secondary'}`}>
-                            {new Date(reminder.due_date).toLocaleDateString(undefined, {
-                              month: 'short',
-                              day: 'numeric'
-                            })}
-                          </p>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : (
-                <div className="text-center py-8 bg-background rounded-medium border border-dashed border-gray-200">
-                  <p className="text-sm text-text-secondary">You're all caught up!</p>
-                  <p className="text-xs text-text-disabled mt-1">No reminders for the next 30 days.</p>
-                </div>
-              )}
-            </section>
-          </div>
-
+    <div className="min-h-screen flex flex-col bg-background font-sans">
+      {/* Navigation */}
+      <header className="w-full px-6 py-4 flex items-center justify-between bg-background-paper shadow-sm">
+        <div className="flex items-center gap-2 text-primary">
+          <PawPrint className="w-8 h-8" />
+          <span className="text-2xl font-bold tracking-tight text-text-primary">VetTrax</span>
         </div>
-      </div>
+        <nav className="flex items-center gap-4">
+          <Link href="/auth/login" className="text-text-secondary hover:text-primary transition-colors font-medium">
+            Log In
+          </Link>
+          <Link href="/auth/login?register=true" className="bg-primary text-primary-contrast px-5 py-2 rounded-medium font-medium hover:bg-primary-dark transition-colors">
+            Get Started
+          </Link>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20 lg:py-32 bg-hero bg-cover bg-no-repeat bg-center">
+        <div className="z-20 bg-primary-dark/75 p-5 rounded">
+          <p className="text-lg lg:text-xl text-white mb-10 max-w-2xl">The all-in-one clinical platform to manage pet profiles, securely track medical records, and never miss an important health reminder again.</p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link href="/auth/login?register=true" className="flex items-center justify-center gap-2 bg-secondary text-secondary-contrast px-8 py-4 rounded-medium text-lg font-bold hover:bg-secondary-dark transition-all shadow-lg shadow-secondary/20 hover:-translate-y-1">
+              Create Free Account
+              <ChevronRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </main>
+
+      {/* Features Section */}
+      <section className="bg-background-paper py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-text-primary mb-4">Everything you need in one place</h2>
+            <p className="text-text-secondary max-w-2xl mx-auto">VetTrax simplifies pet management with intuitive tools designed for comprehensive care.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="p-8 rounded-large bg-background border border-text-disabled/30 hover:border-primary-light transition-colors">
+              <div className="w-14 h-14 rounded-medium bg-primary-light/20 flex items-center justify-center text-primary mb-6">
+                <PawPrint className="w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-text-primary mb-3">Detailed Pet Profiles</h3>
+              <p className="text-text-secondary">Store essential details including name, weight, height, breed, color, and upload a profile picture so every pet&apos;s identity is front and center.</p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="p-8 rounded-large bg-background border border-text-disabled/30 hover:border-primary-light transition-colors">
+              <div className="w-14 h-14 rounded-medium bg-status-info/10 flex items-center justify-center text-status-info mb-6">
+                <FileText className="w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-text-primary mb-3">Clinical Vet Records</h3>
+              <p className="text-text-secondary">Log and organize medical history, vaccinations, and visit summaries securely so you always have access to critical health data.</p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="p-8 rounded-large bg-background border border-text-disabled/30 hover:border-secondary-light transition-colors">
+              <div className="w-14 h-14 rounded-medium bg-secondary-light/20 flex items-center justify-center text-secondary mb-6">
+                <Bell className="w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-text-primary mb-3">Automated Reminders</h3>
+              <p className="text-text-secondary">Set custom alerts for upcoming appointments, medication schedules, and routine checkups to keep health on track.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer / Final CTA */}
+      <footer className="w-full bg-primary-dark py-12 px-6 text-center">
+        <h2 className="text-2xl font-bold text-primary-contrast mb-6">Ready to streamline your pet care?</h2>
+        <Link href="/auth/login?register=true" className="inline-block bg-background-paper text-primary-dark px-8 py-3 rounded-medium font-bold hover:bg-background transition-colors">
+          Start using VetTrax today
+        </Link>
+        <p className="mt-12 text-primary-light/60 text-sm">&copy; {new Date().getFullYear()} VetTrax. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
-
-export default DashboardPage;

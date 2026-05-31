@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import DashboardLayoutClient from "@/components/layout/DashboardLayoutClient";
-import { requireUser } from "@/utils/supabase/auth";
-import { ModalProvider } from "@/context/ModalContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,13 +22,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await requireUser();
+
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
       <body>
-        <ModalProvider>
-          <DashboardLayoutClient user={user}> {children}</DashboardLayoutClient>
-        </ModalProvider>
+       {children}
       </body>
     </html>
   );
