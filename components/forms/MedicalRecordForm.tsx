@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 type FormProps = {
   initialData?: Partial<MedicalRecordUpdateForm>;
   pets: Array<{ id: string; name: string }>;
-  recordId: string | null;
+  recordId?: string;
 };
 
 export default function MedicalRecordForm({ initialData, pets, recordId }: FormProps) {
