@@ -1,5 +1,4 @@
 import { createServerClient } from '@supabase/ssr'
-import { redirect } from 'next/dist/server/api-utils'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
@@ -22,16 +21,15 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const publicRoutes = ['/auth/login', '/auth/password-reset', '/auth/register/success']
-  const {data:{user}} = await supabase.auth.getUser()
-  
-  const isPublicRoute =publicRoutes.includes(request.nextUrl.pathname )|| request.nextUrl.pathname.startsWith('/api')
 
-  if(!isPublicRoute && !user){
+  const authenticatedRoutes = ['/dashboard', '/settings', '/pets', '/reminders', '/records', '/api/cloudinary']
+  const {data:{user}} = await supabase.auth.getUser()
+
+  if(authenticatedRoutes.some(route => request.nextUrl.pathname.startsWith(route)) && !user){
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
   if(user && request.nextUrl.pathname.startsWith('/auth/login')){
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return supabaseResponse
