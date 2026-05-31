@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { login, registerUser } from "@/actions/auth";
 
@@ -10,13 +9,18 @@ import { login, registerUser } from "@/actions/auth";
 
 export default  function LoginPage() {
   const router = useRouter();
-  const supabase = createClient();
+  const searchParams = useSearchParams();
+  const isRegisterpage: boolean = searchParams.get('register') === 'true';
 
-  const [isSignUp, setIsSignUp] = useState(false);
+
+
+  const [isSignUp, setIsSignUp] = useState(isRegisterpage);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+
 
   const handleAuth = async (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -47,6 +51,8 @@ export default  function LoginPage() {
       setIsLoading(false);
     }
   };
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">

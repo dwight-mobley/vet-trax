@@ -22,16 +22,14 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const publicRoutes = ['/auth/login', '/auth/password-reset', '/auth/register/success']
+  const AuthenticatedRoutes = ['/authenticated/*']
   const {data:{user}} = await supabase.auth.getUser()
-  
-  const isPublicRoute =publicRoutes.includes(request.nextUrl.pathname )|| request.nextUrl.pathname.startsWith('/api')
 
-  if(!isPublicRoute && !user){
+  if(AuthenticatedRoutes.includes(request.nextUrl.pathname) && !user){
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
   if(user && request.nextUrl.pathname.startsWith('/auth/login')){
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return supabaseResponse
