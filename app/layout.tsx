@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import LandingPageNavbar from "@/components/layout/LandingPageNavbar";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,8 +27,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
-      <body>
+      <body className="min-h-screen flex flex-col">
+        <LandingPageNavbar/>
        {children}
+       <Footer/>
       </body>
     </html>
   );

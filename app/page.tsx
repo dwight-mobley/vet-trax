@@ -6,23 +6,10 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
       {/* Navigation */}
-      <header className="w-full px-6 py-4 flex items-center justify-between bg-background-paper shadow-sm">
-        <div className="flex items-center gap-2 text-primary">
-          <PawPrint className="w-8 h-8" />
-          <span className="text-2xl font-bold tracking-tight text-text-primary">VetTrax</span>
-        </div>
-        <nav className="flex items-center gap-4">
-          <Link href="/auth/login" className="text-text-secondary hover:text-primary transition-colors font-medium">
-            Log In
-          </Link>
-          <Link href="/auth/login?register=true" className="bg-primary text-primary-contrast px-5 py-2 rounded-medium font-medium hover:bg-primary-dark transition-colors">
-            Get Started
-          </Link>
-        </nav>
-      </header>
+
 
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20 lg:py-32 bg-hero bg-cover bg-no-repeat bg-center">
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20 lg:py-32 bg-hero bg-contain ">
         <div className="z-20 bg-primary-dark/75 p-5 rounded">
           <p className="text-lg lg:text-xl text-white mb-10 max-w-2xl">The all-in-one clinical platform to manage pet profiles, securely track medical records, and never miss an important health reminder again.</p>
           <div className="flex flex-col sm:flex-row gap-4">
@@ -73,14 +60,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer / Final CTA */}
-      <footer className="w-full bg-primary-dark py-12 px-6 text-center">
-        <h2 className="text-2xl font-bold text-primary-contrast mb-6">Ready to streamline your pet care?</h2>
-        <Link href="/auth/login?register=true" className="inline-block bg-background-paper text-primary-dark px-8 py-3 rounded-medium font-bold hover:bg-background transition-colors">
-          Start using VetTrax today
-        </Link>
-        <p className="mt-12 text-primary-light/60 text-sm">&copy; {new Date().getFullYear()} VetTrax. All rights reserved.</p>
-      </footer>
+
+
     </div>
   );
 }

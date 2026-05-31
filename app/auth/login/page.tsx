@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { login, registerUser } from "@/actions/auth";
@@ -10,11 +10,8 @@ import { login, registerUser } from "@/actions/auth";
 export default  function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isRegisterpage: boolean = searchParams.get('register') === 'true';
 
-
-
-  const [isSignUp, setIsSignUp] = useState(isRegisterpage);
+  const isSignUp = searchParams.get('register')?.toLowerCase() === 'true';
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -54,8 +51,10 @@ export default  function LoginPage() {
 
 
 
+
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-full flex-1 flex items-center justify-center  bg-background bg-hero bg-contain bg-no-repeat bg-center  ">
       {/* Main Card */}
       <div className="w-full max-w-md bg-background-paper rounded-large shadow-xl border border-text-disabled/30 p-8">
 
@@ -138,15 +137,11 @@ export default  function LoginPage() {
         {/* Footer Toggle */}
         <div className="mt-8 text-center text-sm text-text-secondary">
           {isSignUp ? "Already have an account?" : "Don't have an account yet?"}{" "}
-          <button
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setError(null);
-            }}
+          <Link href={`/auth/login${!isSignUp ? '?register=true' : ''}`}
             className="font-medium text-primary hover:text-primary-dark transition-colors"
           >
             {isSignUp ? "Sign in instead" : "Create one now"}
-          </button>
+          </Link>
         </div>
 
       </div>
