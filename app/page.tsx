@@ -7,9 +7,8 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
       {/* Hero Section */}
-      <main className="w-full min-h-[550px] flex-1 flex flex-col items-center justify-center text-center px-6 py-20 lg:py-32 bg-hero bg-cover  bg-center">
-       
-        
+      <main className=" flex-1 flex flex-col items-center justify-center text-center  ">       
+        <Image src="/hero.png" alt="Hero Image" loading="eager" width={800} height={400} className="min-w-screen" />
       </main>
 
       {/* Features Section */}
