@@ -1,24 +1,15 @@
 import Link from "next/link";
 import { PawPrint, FileText, Bell, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import Footer from "@/components/layout/Footer";
 
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
-      {/* Navigation */}
-
-
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20 lg:py-32 bg-hero bg-contain ">
-        <div className="z-20 bg-primary-dark/75 p-5 rounded">
-          <p className="text-lg lg:text-xl text-white mb-10 max-w-2xl">The all-in-one clinical platform to manage pet profiles, securely track medical records, and never miss an important health reminder again.</p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/auth/login?register=true" className="flex items-center justify-center gap-2 bg-secondary text-secondary-contrast px-8 py-4 rounded-medium text-lg font-bold hover:bg-secondary-dark transition-all shadow-lg shadow-secondary/20 hover:-translate-y-1">
-              Create Free Account
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
+      <main className="w-full min-h-[550px] flex-1 flex flex-col items-center justify-center text-center px-6 py-20 lg:py-32 bg-hero bg-cover  bg-center">
+       
+        
       </main>
 
       {/* Features Section */}
@@ -60,7 +51,7 @@ export default function Home() {
         </div>
       </section>
 
-
+      <Footer/>
 
     </div>
   );
