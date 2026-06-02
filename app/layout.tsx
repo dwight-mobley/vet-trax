@@ -32,9 +32,7 @@ export default async function RootLayout({
         <LandingPageNavbar/>
         <ModalProvider>
           {children}
-        </ModalProvider>
-
-       <Footer/>
+        </ModalProvider>      
       </body>
     </html>
   );

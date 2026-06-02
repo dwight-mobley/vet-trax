@@ -90,9 +90,9 @@ function LoginRegisterForm() {
   return (
     <div className="w-full flex justify-center">
       {/* Main Card */}
-      <div className="w-full max-w-md bg-background-paper rounded-large shadow-xl border border-text-disabled/30 p-8">
+      <div className="w-full max-w-md bg-background-paper rounded-large shadow-xl border border-text-disabled/30 p-4">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <h1 className="text-2xl font-semibold text-text-primary">{isSignUp ? "Create an Account" : "Welcome Back"}</h1>
           <p className="text-text-secondary mt-2 text-sm">{isSignUp ? "Enter your details to register in the portal." : "Sign in to securely access your portal."}</p>
         </div>
