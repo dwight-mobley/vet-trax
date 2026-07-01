@@ -48,7 +48,7 @@ export const resetPassword = async (data: FormData, url: string) => {
     const headersList = await headers();
      const origin = headersList.get('origin') // Automatically gets http://localhost:3000 or production domain
     const { error } = await supabase.auth.resetPasswordForEmail(email as string, {
-        redirectTo: `${origin}/api/auth/confirm`,
+        redirectTo: `${origin}api/auth/confirm`,
     })
     if (error) {
         return { error: error };
