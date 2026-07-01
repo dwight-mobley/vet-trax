@@ -1,4 +1,5 @@
 import CreateReminderForm from "@/components/forms/CreateReminderForm";
+import BackButton from "@/components/ui/BackButton";
 import { getUserPets } from "@/data-access/pets";
 import { getReminderById } from "@/data-access/reminders";
 import { requireUser } from "@/utils/supabase/auth";
@@ -20,9 +21,7 @@ export default async function EditPetPage({ params }: { params: { id: string } }
     <div className="max-w-2xl mx-auto mt-10">
         {/* Back Navigation */}
             <div className="mb-6">
-                <Link href={`/reminders/`} className="text-primary hover:text-primary-dark hover:underline text-sm font-medium transition-colors inline-flex items-center">
-                    &larr; Back to Reminders
-                </Link>
+                <BackButton/>
             </div>
       <h1 className="text-2xl font-semibold mb-6">Edit {reminder.pet!.name}</h1>
 
