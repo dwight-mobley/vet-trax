@@ -28,6 +28,7 @@ const Dot = () => {
 export default function UpdatePassword() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [isSuccess, setIsSuccess] = useState(false)
     const [validPassword, setValidPassword] = useState({
         passwordsMatch: false,
         correctLength: false,
@@ -50,6 +51,8 @@ export default function UpdatePassword() {
 
     }, [password, confirmPassword])
 
+
+
     const onSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault()
         try {
@@ -57,13 +60,14 @@ export default function UpdatePassword() {
                 showError('Passwords Error', "Make sure your passwords meets validation requirements.")
                 return;
             }
-           
+
             const result = await updatePassword(new FormData(e.target))
-           
+
             if(result?.error){
                 showError('Password Update Failed', result.error);
                 return;
             }
+            setIsSuccess(true)
             showSuccess('Password Changed', 'Your password was successfully changed.')
             router.push('/');
         } catch (err) {
@@ -156,10 +160,10 @@ export default function UpdatePassword() {
                     {Object.values(validPassword).every(value => value === true) &&
                         <button
                             type="submit"
-                            disabled={!Object.values(validPassword).every(value => value === true)}
+                            disabled={!Object.values(validPassword).every(value => value === true) || isSuccess}
                             className="w-full bg-primary hover:bg-primary-dark text-primary-contrast font-medium py-2.5 px-4 rounded-medium transition-colors shadow-sm mt-6"
                         >
-                            Update Password
+                            {isSuccess ? "Redirecting to Dashboard" :"Update Password"}
                         </button>
                     }
                 </form>
