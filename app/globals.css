@@ -1,49 +1,110 @@
-/* app/globals.css */
 @import "tailwindcss";
 
-@theme {
-  /* Typography */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+/* ─────────────────────────────────────────────────
+   Tailwind v4 Theme Configuration
+   (Replaces the old tailwind.config.ts entirely)
+   ───────────────────────────────────────────────── */
 
-  /* Hero Image */
-   --background-image-hero: url('/hero.png');
-  /* Clinical Teal (Primary) */
+@theme {
+  /* Clinical Teal */
   --color-primary: #0F766E;
   --color-primary-light: #2DD4BF;
   --color-primary-dark: #115E59;
   --color-primary-contrast: #FFFFFF;
 
-  /* Warm Orange (Secondary) */
+  /* Approachable Warm Orange */
   --color-secondary: #F97316;
   --color-secondary-light: #FDBA74;
   --color-secondary-dark: #C2410C;
   --color-secondary-contrast: #FFFFFF;
 
-  /* Base UI Colors */
+  /* Accent Blue */
+  --color-accent: #0EA5E9;
+  --color-accent-light: #7DD3FC;
+  --color-accent-dark: #0284C7;
+
+  /* Base UI */
   --color-background: #F8FAFC;
   --color-background-paper: #FFFFFF;
 
-  /* Typography Colors */
+  /* Text */
   --color-text-primary: #0F172A;
   --color-text-secondary: #64748B;
   --color-text-disabled: #CBD5E1;
 
-  /* Medical/Notification Statuses */
+  /* Status */
   --color-status-healthy: #22C55E;
   --color-status-warning: #F59E0B;
   --color-status-critical: #EF4444;
   --color-status-info: #3B82F6;
 
-  /* Border Radii */
+  /* Typography */
+  --font-family-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Border Radius */
   --radius-small: 4px;
   --radius-medium: 8px;
   --radius-large: 16px;
+  --radius-xl: 24px;
+
+  /* Shadow tokens (Tailwind v4 uses `--shadow-*`) */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-card-hover: 0 4px 12px 0 rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-glow: 0 4px 14px 0 rgb(15 118 110 / 0.25);
 }
 
-/* Optional: Set global base styles if you prefer this over adding utility classes to the <body> tag */
-@layer base {
-  body {
-    background-color: var(--color-background);
-    color: var(--color-text-primary);
-  }
+/* ─────────────────────────────────────────────────
+   Custom Keyframe Animations
+   ───────────────────────────────────────────────── */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-8deg); }
+  75%      { transform: rotate(8deg); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%      { transform: scale(1.4); opacity: 0.7; }
+}
+
+/* ─────────────────────────────────────────────────
+   Utility Classes
+   ───────────────────────────────────────────────── */
+
+.animate-fade-in  { animation: fadeIn 0.4s ease-out both; }
+.animate-slide-up  { animation: slideUp 0.5s ease-out both; }
+.animate-wave      { animation: wave 2s ease-in-out infinite; transform-origin: 70% 70%; }
+.animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+/* Staggered delays */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+
+/* ─────────────────────────────────────────────────
+   Scrollbar
+   ───────────────────────────────────────────────── */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb { background: #4b5563; }
+  ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
 }
