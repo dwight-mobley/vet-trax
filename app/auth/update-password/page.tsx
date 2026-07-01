@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/context/ModalContext";
 import { AuthError } from "@supabase/supabase-js";
 import { updatePassword } from "@/actions/auth";
+import BackButton from "@/components/ui/BackButton";
 
 
 //Checkmark
@@ -26,6 +27,8 @@ const Dot = () => {
 }
 
 export default function UpdatePassword() {
+     const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState<User | null>(null)
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("")
     const [isSuccess, setIsSuccess] = useState(false)
@@ -35,8 +38,28 @@ export default function UpdatePassword() {
         specialChar: false,
         includesNumber: false
     })
+
     const router = useRouter()
     const { showSuccess, showError } = useModal()
+
+
+    const supabase = createClient()
+
+    useEffect(()=>{
+         async function fetchUser() {
+      const { data: { user }, error } = await supabase.auth.getUser()
+
+      if (!error && user) {
+        setUser(user)
+      }
+      setLoading(false)
+    }
+    fetchUser()
+    },[supabase.auth])
+
+
+
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -51,7 +74,7 @@ export default function UpdatePassword() {
 
     }, [password, confirmPassword])
 
-
+if (loading) return <p>Loading ...</p>
 
     const onSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault()
@@ -63,7 +86,7 @@ export default function UpdatePassword() {
 
             const result = await updatePassword(new FormData(e.target))
 
-            if(result?.error){
+            if (result?.error) {
                 showError('Password Update Failed', result.error);
                 return;
             }
@@ -77,7 +100,7 @@ export default function UpdatePassword() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4 font-sans">
             <div className="w-full max-w-md bg-background-paper rounded-large shadow-lg p-8">
-
+                {user && <BackButton/>}
                 {/* Header Section */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-secondary/10 text-secondary mb-4">
@@ -163,7 +186,7 @@ export default function UpdatePassword() {
                             disabled={!Object.values(validPassword).every(value => value === true) || isSuccess}
                             className="w-full bg-primary hover:bg-primary-dark text-primary-contrast font-medium py-2.5 px-4 rounded-medium transition-colors shadow-sm mt-6"
                         >
-                            {isSuccess ? "Redirecting to Dashboard" :"Update Password"}
+                            {isSuccess ? "Redirecting to Dashboard" : "Update Password"}
                         </button>
                     }
                 </form>
