@@ -2,43 +2,16 @@ import React from "react";
 import Link from "next/link";
 import { Reminder } from "@/types/reminder";
 
-import { IconCheckCircle, IconDog, IconPaw, IconPlus } from "@/components/ui/icons";
+import { IconCheckCircle, IconDog, IconPlus } from "@/components/ui/icons";
 import { parseDateKeyAsLocalDate } from "@/utils/tools/dates";
-import {DashboardPetCard} from "@/components/cards/DashboardPetCard";
+import { DashboardPetCard } from "@/components/cards/DashboardPetCard";
 import { ReminderDatePin } from "@/components/reminders/ReminderDatePin";
 import { getUserPets } from "@/data-access/pets";
 import { getUserReminders } from "@/data-access/reminders";
-import {parseDbDate } from "@/utils/tools";
+import { parseDbDate } from "@/utils/tools";
 import { requireUser } from "@/utils/supabase/auth";
 
 
-
-// ─────────────────────────────────────────────────
-// Helper: group reminders by urgency
-// ─────────────────────────────────────────────────
-
-function categorizeReminders(reminders: Reminder[]) {
-  const now = new Date();
-  const todayEnd = new Date(now);
-  todayEnd.setHours(23, 59, 59, 999);
-  const sevenDays = new Date();
-  sevenDays.setDate(now.getDate() + 7);
-
-  const overdue: Reminder[] = [];
-  const today: Reminder[] = [];
-  const thisWeek: Reminder[] = [];
-
-  for (const r of reminders) {
-    const d = parseDbDate(r.due_date);
-    if (!d) continue;
-
-    if (d < now) overdue.push(r);
-    else if (d <= todayEnd) today.push(r);
-    else if (d <= sevenDays) thisWeek.push(r);
-  }
-
-  return { overdue, today, thisWeek };
-}
 
 function getLocalDateKey(date: Date) {
   const year = date.getFullYear();
@@ -162,10 +135,12 @@ async function DashboardPage() {
       parseDateKeyAsLocalDate(a).getTime() - parseDateKeyAsLocalDate(b).getTime()
   );
 
-  const { overdue, today, thisWeek } = categorizeReminders(windowedReminders);
+  const mobilePreviewPetCount = 6;
+  const previewPets = pets.slice(0, mobilePreviewPetCount);
+  const hiddenPets = pets.slice(mobilePreviewPetCount);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50/80 to-white pb-12 dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50/80 to-white pb-24 dark:from-gray-950 dark:to-gray-900 md:pb-12">
       <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
         {/* ─── Header ─── */}
         <header className="mb-8 animate-[fadeIn_0.4s_ease-out]">
@@ -190,6 +165,7 @@ async function DashboardPage() {
             </Link>
           </div>
         </header>
+
         {/* ─── Main Grid ─── */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* ─── Left: Pets ─── */}
@@ -206,11 +182,32 @@ async function DashboardPage() {
 
               <div className="p-6">
                 {pets.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    {pets.map((pet) => (
-                      <DashboardPetCard key={pet.id} pet={pet} />
-                    ))}
-                  </div>
+                  <>
+                    <div className="grid grid-cols-2 gap-3 sm:hidden">
+                      {previewPets.map((pet) => (
+                        <DashboardPetCard key={pet.id} pet={pet} />
+                      ))}
+
+                      {hiddenPets.length > 0 && (
+                        <details className="col-span-2 rounded-xl border border-gray-100 bg-gray-50/70 px-4 py-3 text-sm dark:border-gray-800 dark:bg-gray-900/50">
+                          <summary className="cursor-pointer font-semibold text-gray-700 dark:text-gray-300">
+                            Show {hiddenPets.length} more {hiddenPets.length === 1 ? "pet" : "pets"}
+                          </summary>
+                          <div className="mt-3 grid grid-cols-2 gap-3">
+                            {hiddenPets.map((pet) => (
+                              <DashboardPetCard key={pet.id} pet={pet} />
+                            ))}
+                          </div>
+                        </details>
+                      )}
+                    </div>
+
+                    <div className="hidden grid-cols-1 gap-3 sm:grid sm:grid-cols-2">
+                      {pets.map((pet) => (
+                        <DashboardPetCard key={pet.id} pet={pet} />
+                      ))}
+                    </div>
+                  </>
                 ) : (
                   <PetsEmptyState />
                 )}

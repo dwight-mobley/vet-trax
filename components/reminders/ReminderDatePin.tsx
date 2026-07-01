@@ -39,24 +39,24 @@ export function ReminderDatePin({
       open={defaultOpen}
       className="group rounded-xl border border-gray-100 bg-white/90 shadow-sm transition-all open:border-gray-200 open:shadow-md hover:border-gray-200 dark:border-gray-800 dark:bg-gray-900/80 dark:open:border-gray-700"
     >
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-2.5 py-2 hover:bg-gray-50 sm:gap-3 sm:px-3 sm:py-2.5 dark:hover:bg-gray-800/50">
         <div className="flex min-w-0 items-center gap-2">
           <span
             className={`h-2.5 w-2.5 shrink-0 rounded-full ${overdue ? "bg-red-500" : "bg-emerald-500"
               }`}
           />
-          <span className="truncate text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <span className="truncate text-[13px] font-semibold text-gray-900 sm:text-sm dark:text-gray-100">
             {dateLabel}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span
-            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${pinDateBadgeStyle}`}
+            className={`hidden items-center rounded-full px-2 py-0.5 text-[11px] font-medium sm:inline-flex ${pinDateBadgeStyle}`}
           >
             {pinDateState.date}
           </span>
           <span
-            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${overdue
+            className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold sm:px-2 sm:text-[11px] ${overdue
               ? "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400"
               : "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
               }`}
@@ -78,7 +78,7 @@ export function ReminderDatePin({
         </div>
       </summary>
 
-      <ul className="border-t border-gray-100 bg-gray-50/40 px-2 py-1 dark:border-gray-800 dark:bg-gray-900/40">
+      <ul className="border-t border-gray-100 bg-gray-50/40 px-1.5 py-0.5 sm:px-2 sm:py-1 dark:border-gray-800 dark:bg-gray-900/40">
         {reminders.map((reminder) => (
           <ReminderItem key={reminder.id} reminder={reminder} />
         ))}

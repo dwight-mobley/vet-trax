@@ -3,7 +3,7 @@ import { dateCalculator, parseDbDate } from "@/utils/tools";
 
 
 
- export function IconCalendar() {
+export function IconCalendar() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
       <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
@@ -51,17 +51,17 @@ export function ReminderItem({ reminder }: { reminder: Reminder }) {
   }
 
   return (
-    <li className="group flex items-start gap-3 rounded-xl p-3 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/50">
+    <li className="group flex items-start gap-2 rounded-xl p-2 transition-all hover:bg-gray-50 sm:gap-3 sm:p-3 dark:hover:bg-gray-800/50">
       <div className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${dotColor} shadow-sm`} />
-      <div className="flex flex-1 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+      <div className="flex flex-1 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2">
+        <span className="text-[13px] font-semibold text-gray-900 sm:text-sm dark:text-gray-100">
           {reminder?.pet?.name || ''}
         </span>
-        <span className="text-sm text-gray-600 dark:text-gray-300">
+        <span className="text-[13px] text-gray-600 sm:text-sm dark:text-gray-300">
           {reminder.title}
         </span>
         <span
-          className={`ml-auto inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${badgeStyle}`}
+          className={`ml-auto inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium sm:px-2 sm:text-[11px] ${badgeStyle}`}
         >
           <IconCalendar />
           {badgeLabel}

@@ -16,11 +16,11 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
   return (
     <Link
       href={`/pets/${pet.id}`}
-      className="group relative flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:border-gray-200 hover:-translate-y-0.5 active:scale-[0.98] dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"
+      className="group relative flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-gray-200 hover:shadow-lg active:scale-[0.98] sm:gap-4 sm:p-4 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"
     >
       {/* Avatar */}
       <div
-        className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} text-lg font-bold text-white shadow-inner`}
+        className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-base font-bold text-white shadow-inner sm:h-14 sm:w-14 sm:rounded-2xl sm:text-lg`}
       >
         {pet.name.charAt(0).toUpperCase()}
         {/* Online indicator */}
@@ -29,10 +29,10 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
 
       {/* Info */}
       <div className="min-w-0 flex-1">
-        <h3 className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors dark:text-gray-100 dark:group-hover:text-emerald-400">
+        <h3 className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-emerald-600 sm:text-base dark:text-gray-100 dark:group-hover:text-emerald-400">
           {pet.name}
         </h3>
-        <p className="text-sm text-gray-500 capitalize dark:text-gray-400">
+        <p className="text-xs text-gray-500 capitalize sm:text-sm dark:text-gray-400">
           {pet.breed || pet.species || "Pet"}
         </p>
       </div>

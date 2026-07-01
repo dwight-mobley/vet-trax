@@ -17,7 +17,7 @@ export default async function EditRecordPage({params}:{params:Promise<{id:string
 
     return (
         <div className="w-full max-w-2xl mx-auto flex flex-col gap-3">
-            <BackButton href={`/records/${record.id}`} pageTitle={`Medical Record`}/>
+            <BackButton />
             <h1 className="text-3xl font-bold text-text-primary">Edit Medical Record</h1>
             <MedicalRecordForm initialData={record} pets={pets} recordId={record.id as string} />
         </div>

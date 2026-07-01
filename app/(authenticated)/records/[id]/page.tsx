@@ -49,7 +49,7 @@ export default async function MedicalRecordDetailsPage({params}:{params:Promise<
         {/* Header Section */}
         <div className="flex items-center justify-between">
           <div>
-             <BackButton href='/records' pageTitle='Medical Records'/>
+             <BackButton />
             <div className="flex items-center gap-3 mb-2">
 
               <h1 className="text-3xl font-bold text-text-primary">

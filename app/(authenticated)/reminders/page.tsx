@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { ReminderFilterBar } from "@/components/reminders/ReminderFilterBar";
 import ReminderTable from "@/components/reminders/ReminderTable";
+import ReminderMobileList from "@/components/reminders/ReminderMobileList";
 
 export default async function ReminderPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const params = await searchParams;
@@ -31,24 +32,29 @@ export default async function ReminderPage({ searchParams }: { searchParams: Pro
     .map((r) => ({ ...r, completed_at: null }));
 
   return (
-    <div className="mx-auto w-full max-w-6xl p-6">
-      <div className="mb-3 flex items-center justify-between">
+    <div className="mx-auto w-full max-w-6xl p-4 sm:p-6">
+      <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold text-text-primary">Upcoming Reminders</h1>
-        <Link href="/reminders/new" className="rounded-medium bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark">
+        <Link href="/reminders/new" className="w-full rounded-medium bg-primary px-4 py-2 text-center text-sm font-semibold text-white hover:bg-primary-dark sm:w-auto">
           + New Reminder
         </Link>
       </div>
-        {/* History Navigation */}
+      {/* History Navigation */}
       <div className="mb-6">
         <Link href="/reminders/completed" className="rounded-medium bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark">
-         View Completed Reminders
+          View Completed Reminders
         </Link>
       </div>
 
       <div className="mb-6">
         <ReminderFilterBar />
       </div>
-      <ReminderTable reminders={processedReminders} history={false}/>
+      <div className="md:hidden">
+        <ReminderMobileList reminders={processedReminders} />
+      </div>
+      <div className="hidden md:block">
+        <ReminderTable reminders={processedReminders} history={false} />
+      </div>
     </div>
   );
 }
