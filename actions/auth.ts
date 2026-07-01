@@ -6,6 +6,7 @@ import { requireUser } from '@/utils/supabase/auth';
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@supabase/ssr';
 import { createAdminClient } from '@/utils/supabase/admin';
+import { headers } from 'next/headers'
 
 export async function registerUser(formData: FormData, url: string) {
     const supabase = await createClient(await cookies());
@@ -38,15 +39,21 @@ export async function login(formData: FormData) {
 }
 
 export const resetPassword = async (data: FormData, url: string) => {
+
     const email = data.get('email');
     if (!email) return { error: { message: 'Email is required' } };
+
     const supabase = await createClient(await cookies());
+     await supabase.auth.signOut({scope: 'global'});
+    const headersList = await headers();
+     const origin = headersList.get('origin') // Automatically gets http://localhost:3000 or production domain
     const { error } = await supabase.auth.resetPasswordForEmail(email as string, {
-        redirectTo: `${url}/auth/update-password`,
+        redirectTo: `${origin}/api/auth/confirm`,
     })
     if (error) {
         return { error: error };
     }
+
     return null;
 }
 
@@ -64,13 +71,13 @@ export const updatePassword = async (data: FormData) => {
 export const deleteAccount = async () => {
     //Get current user
     const user = await requireUser();
-  
+
     const supabase = await createAdminClient(await cookies());
     const { error } = await supabase.auth.admin.deleteUser(user.id);
-   
+
     if (error) {
         return error.message
-    }        
+    }
     await supabase.auth.signOut();
     redirect('/auth/login')
 }

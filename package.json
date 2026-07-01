@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-   "generate-types": "npx supabase gen types typescript --project-id \"ubiahpwpbvhuhsxultyb\" --schema public > types/supabase.ts && npx supazod -i types/supabase.ts -o schemas/database.ts --inline-types -s public && node -e \"const fs=require('fs');const f='schemas/database.ts';fs.writeFileSync(f,fs.readFileSync(f,'utf8').replace('export const jsonSchema = z.lazy','export const jsonSchema: z.ZodTypeAny = z.lazy'))\"",
+    "generate-types": "npx supabase gen types typescript --project-id \"ubiahpwpbvhuhsxultyb\" --schema public > types/supabase.ts && npx supazod -i types/supabase.ts -o schemas/database.ts --inline-types -s public && node -e \"const fs=require('fs');const f='schemas/database.ts';fs.writeFileSync(f,fs.readFileSync(f,'utf8').replace('export const jsonSchema = z.lazy','export const jsonSchema: z.ZodTypeAny = z.lazy'))\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
