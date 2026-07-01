@@ -1,7 +1,8 @@
-import { getUserReminderHistory, getUserReminders } from "@/data-access/reminders";
+import { getUserReminderHistory } from "@/data-access/reminders";
 import Link from "next/link";
 import { ReminderFilterBar } from "@/components/reminders/ReminderFilterBar";
 import ReminderTable from "@/components/reminders/ReminderTable";
+import ReminderMobileList from "@/components/reminders/ReminderMobileList";
 import { requireUser } from "@/utils/supabase/auth";
 
 export default async function ReminderPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
@@ -24,8 +25,8 @@ export default async function ReminderPage({ searchParams }: { searchParams: Pro
     });
 
   return (
-    <div className="mx-auto w-full max-w-6xl p-6">
-        {/* Back Navigation */}
+    <div className="mx-auto w-full max-w-6xl p-4 sm:p-6">
+      {/* Back Navigation */}
       <div className="mb-6">
         <Link href="/reminders" className="text-primary hover:text-primary-dark hover:underline text-sm font-medium transition-colors inline-flex items-center">
           &larr; Back to Reminders
@@ -36,9 +37,15 @@ export default async function ReminderPage({ searchParams }: { searchParams: Pro
       </div>
 
       <div className="mb-6">
-        <ReminderFilterBar />
+        <ReminderFilterBar basePath="/reminders/completed" />
       </div>
-      <ReminderTable reminders={processedReminders} history={true}/>
+
+      <div className="md:hidden">
+        <ReminderMobileList reminders={processedReminders} history={true} />
+      </div>
+      <div className="hidden md:block">
+        <ReminderTable reminders={processedReminders} history={true} />
+      </div>
     </div>
   );
 }

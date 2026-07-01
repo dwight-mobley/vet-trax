@@ -32,67 +32,68 @@ export default async function PetDetailsPage({ params }: { params: Promise<{ id:
   const age: number | string = pet.birth_date ? new Date().getFullYear() - new Date(pet.birth_date!).getFullYear() || "less than 1" : "_";
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 md:p-12 border">
+    <div className="mx-auto w-full max-w-6xl border p-4 sm:p-6 md:p-10 lg:p-12">
       {/* Back Navigation */}
       <div className="mb-6">
         <BackButton />
       </div>
 
       {/* Profile Card */}
-      <div className="bg-background-paper border border-text-disabled rounded-large shadow-sm overflow-hidden">
+      <div className="overflow-hidden rounded-large border border-text-disabled bg-background-paper shadow-sm">
         {/* Header Section */}
-        <div className="p-6 md:p-8 flex justify-between items-start border-b border-text-disabled">
-          <div className="flex gap-6">
-            <div>
-              <h1 className="text-4xl font-bold text-text-primary capitalize mb-2">{pet.name}</h1>
-              <span className="bg-secondary text-secondary-contrast text-sm font-semibold px-3 py-1 rounded-medium capitalize inline-block">{pet.type}</span>
+        <div className="flex flex-col gap-4 border-b border-text-disabled p-4 sm:p-6 md:flex-row md:items-start md:justify-between md:p-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-5">
+            <div className="order-2 sm:order-1">
+              <h1 className="mb-2 text-3xl font-bold capitalize text-text-primary sm:text-4xl">{pet.name}</h1>
+              <span className="inline-block rounded-medium bg-secondary px-3 py-1 text-sm font-semibold capitalize text-secondary-contrast">{pet.type}</span>
             </div>
-            <div>
+
+            <div className="order-1 h-20 w-20 overflow-hidden rounded-medium border border-text-disabled/40 bg-background sm:order-2 sm:h-24 sm:w-24 md:h-28 md:w-28">
               {pet.image ? (
-                <Image src={pet.image} alt={pet.name} width={100} height={100} objectFit="contain" className="h-full w-full object-cover" />
+                <Image src={pet.image} alt={pet.name} width={112} height={112} className="h-full w-full object-cover" />
               ) : (
                 <div className="h-full w-full flex items-center justify-center text-text-disabled">
-                  <span className="text-lg font-medium">No Image Uploaded</span>
+                  <span className="px-2 text-center text-xs font-medium sm:text-sm">No Image</span>
                 </div>
               )}
             </div>
           </div>
 
-          <Link href={`/pets/edit/${pet.id}`} className="text-primary hover:text-primary-dark font-medium px-4 py-2 border border-primary rounded-medium transition-colors hover:bg-background">
+          <Link href={`/pets/edit/${pet.id}`} className="w-full rounded-medium border border-primary px-4 py-2 text-center font-medium text-primary transition-colors hover:bg-background hover:text-primary-dark sm:w-auto">
             Edit Pet
           </Link>
         </div>
 
         {/* Details Grid */}
-        <div className="p-6 md:p-8 grid grid-cols-2 sm:grid-cols-3 gap-y-8 gap-x-6">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-6 p-4 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-8 sm:p-6 md:p-8">
           <div>
             <p className="text-sm font-medium text-text-secondary mb-1">Birth Date</p>
-            <p className="text-lg text-text-primary font-medium">{pet.birth_date ? new Date(pet.birth_date).toLocaleDateString() : "—"}</p>
+            <p className="text-base font-medium text-text-primary sm:text-lg">{pet.birth_date ? new Date(pet.birth_date).toLocaleDateString() : "—"}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-text-secondary mb-1">Age</p>
-            <p className="text-lg text-text-primary font-medium">{age || "—"}</p>
+            <p className="text-base font-medium text-text-primary sm:text-lg">{age || "—"}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-text-secondary mb-1">Breed</p>
-            <p className="text-lg text-text-primary font-medium">{pet.breed || "—"}</p>
+            <p className="text-base font-medium text-text-primary sm:text-lg">{pet.breed || "—"}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-text-secondary mb-1">Color</p>
-            <p className="text-lg text-text-primary font-medium">{pet.color || "—"}</p>
+            <p className="text-base font-medium text-text-primary sm:text-lg">{pet.color || "—"}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-text-secondary mb-1">Weight</p>
-            <p className="text-lg text-text-primary font-medium">{pet.weight ? `${pet.weight} lbs` : "—"}</p>
+            <p className="text-base font-medium text-text-primary sm:text-lg">{pet.weight ? `${pet.weight} lbs` : "—"}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-text-secondary mb-1">Height</p>
-            <p className="text-lg text-text-primary font-medium">{pet.height ? `${pet.height}` : "—"}</p>
+            <p className="text-base font-medium text-text-primary sm:text-lg">{pet.height ? `${pet.height}` : "—"}</p>
           </div>
         </div>
 
         {/* Notes Section */}
-        <div className="p-6 md:p-8 bg-background border-t border-text-disabled">
+        <div className="border-t border-text-disabled bg-background p-4 sm:p-6 md:p-8">
           <p className="text-sm font-medium text-text-secondary mb-3">Medical / Care Notes</p>
           {pet.notes ? <div className="bg-background-paper p-4 rounded-medium border border-text-disabled text-text-primary italic">{pet.notes}</div> : <p className="text-text-disabled italic">No notes added for this pet.</p>}
         </div>

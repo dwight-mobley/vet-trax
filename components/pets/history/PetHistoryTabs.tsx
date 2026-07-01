@@ -31,7 +31,8 @@ export default function PetHistoryTabs({
 
     return (
         <section className="mt-8">
-            <div className="mb-4 flex flex-wrap gap-2 rounded-large border border-text-disabled/30 bg-background-paper p-2">
+            <div className="mb-4 overflow-x-auto rounded-large border border-text-disabled/30 bg-background-paper p-2">
+                <div className="flex w-max min-w-full gap-2">
                 {tabMeta.map((tab) => {
                     const isActive = activeTab === tab.key;
                     return (
@@ -39,12 +40,15 @@ export default function PetHistoryTabs({
                             key={tab.key}
                             type="button"
                             onClick={() => setActiveTab(tab.key)}
-                            className={`inline-flex items-center gap-2 rounded-medium px-4 py-2 text-sm font-semibold transition-colors ${isActive
+                            className={`inline-flex shrink-0 items-center gap-2 rounded-medium px-3 py-2 text-sm font-semibold transition-colors sm:px-4 ${isActive
                                     ? "bg-primary text-white"
                                     : "text-text-secondary hover:bg-background hover:text-text-primary"
                                 }`}
                         >
-                            {tab.label}
+                            <span className="sm:hidden">
+                                {tab.key === "upcoming" ? "Upcoming" : tab.key === "history" ? "History" : "Medical"}
+                            </span>
+                            <span className="hidden sm:inline">{tab.label}</span>
                             <span
                                 className={`rounded-full px-2 py-0.5 text-xs ${isActive ? "bg-white/20 text-white" : "bg-background text-text-secondary"
                                     }`}
@@ -54,6 +58,7 @@ export default function PetHistoryTabs({
                         </button>
                     );
                 })}
+                </div>
             </div>
 
             {activeTab === "upcoming" && <PetUpcomingReminderTable reminders={upcomingReminders} />}

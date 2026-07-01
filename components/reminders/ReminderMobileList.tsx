@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Reminder } from "@/schemas/reminder";
+import { Reminder, ReminderHistory } from "@/schemas/reminder";
 import { dateCalculator, dateFormatter } from "@/utils/tools";
 import MarkReminderCompleteButton from "../ui/MarkReminderCompleteButton";
 import DeleteReminderButton from "../ui/DeleteReminderButton";
@@ -19,7 +19,13 @@ const getCategoryStyles = (category?: string | null) => {
     }
 };
 
-export default function ReminderMobileList({ reminders }: { reminders: Reminder[] }) {
+export default function ReminderMobileList({
+    reminders,
+    history = false,
+}: {
+    reminders: Reminder[] | ReminderHistory[];
+    history?: boolean;
+}) {
     if (reminders.length === 0) {
         return (
             <div className="rounded-large border border-slate-200 bg-background-paper p-4 text-sm text-text-secondary">
@@ -59,18 +65,22 @@ export default function ReminderMobileList({ reminders }: { reminders: Reminder[
                         </div>
 
                         <div className="mb-3 space-y-1 text-xs">
-                            <p className={dueDateStyles}>Due: {dueDate.date}</p>
+                            {!history && <p className={dueDateStyles}>Due: {dueDate.date}</p>}
                             <p className="text-text-secondary">
-                                Last completed: {dateFormatter(reminder.date_completed ?? reminder.completed_at ?? undefined)}
+                                {history ? "Completed" : "Last completed"}: {dateFormatter(reminder.date_completed ?? reminder.completed_at ?? undefined)}
                             </p>
                         </div>
 
                         <div className="flex flex-wrap items-center gap-3 text-sm">
-                            <Link href={`/reminders/edit/${reminder.id}`} className="text-primary hover:underline">
-                                Edit
-                            </Link>
-                            <MarkReminderCompleteButton reminderId={reminder.id as string} />
-                            <DeleteReminderButton reminderId={reminder.id as string} history={false} />
+                            {!history && (
+                                <>
+                                    <Link href={`/reminders/edit/${reminder.id}`} className="text-primary hover:underline">
+                                        Edit
+                                    </Link>
+                                    <MarkReminderCompleteButton reminderId={reminder.id as string} />
+                                </>
+                            )}
+                            <DeleteReminderButton reminderId={reminder.id as string} history={history} />
                         </div>
                     </article>
                 );

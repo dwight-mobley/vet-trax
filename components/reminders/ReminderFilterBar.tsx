@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-export function ReminderFilterBar() {
+export function ReminderFilterBar({ basePath = "/reminders" }: { basePath?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -10,7 +10,7 @@ export function ReminderFilterBar() {
     const params = new URLSearchParams(searchParams);
     if (value === "all") params.delete(key);
     else params.set(key, value);
-    router.push(`/reminders?${params.toString()}`);
+    router.push(`${basePath}?${params.toString()}`);
   };
 
   return (
