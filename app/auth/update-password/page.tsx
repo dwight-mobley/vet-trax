@@ -7,6 +7,7 @@ import { useModal } from "@/context/ModalContext";
 import { AuthError } from "@supabase/supabase-js";
 import { updatePassword } from "@/actions/auth";
 import BackButton from "@/components/ui/BackButton";
+import { User } from "@/schemas/user";
 
 
 //Checkmark
