@@ -10,7 +10,7 @@ export default async function NewMedicalRecordPage() {
 
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto ">
-      <BackButton href="/records" pageTitle="Medical Records" />
+      <BackButton />
       <h1 className="mb-6 text-2xl font-bold text-text-primary">Add Medical Record</h1>
       <div>
         <MedicalRecordForm pets={pets} />

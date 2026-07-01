@@ -2,14 +2,15 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPetById } from "@/data-access/pets";
 import { requireUser } from "@/utils/supabase/auth";
-import { deletePet } from "@/actions/pet-actions";
 import { DeletePetButton } from "@/components/ui/DeletePetButton";
 import Image from "next/image";
+import BackButton from "@/components/ui/BackButton";
 
 export default async function PetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   // 1. Await params and user
   const resolvedParams = await params;
   const user = await requireUser();
+
 
   // 2. Fetch the pet
   const pet = await getPetById(resolvedParams.id);
@@ -25,9 +26,7 @@ export default async function PetDetailsPage({ params }: { params: Promise<{ id:
     <div className="w-full max-w-6xl mx-auto p-6 md:p-12 border">
       {/* Back Navigation */}
       <div className="mb-6">
-        <Link href="/pets" className="text-primary hover:text-primary-dark hover:underline text-sm font-medium transition-colors inline-flex items-center">
-          &larr; Back to Pets
-        </Link>
+       <BackButton/>
       </div>
 
       {/* Profile Card */}
