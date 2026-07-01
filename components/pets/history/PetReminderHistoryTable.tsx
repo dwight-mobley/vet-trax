@@ -33,7 +33,7 @@ export default function PetReminderHistoryTable({
         <div>
             <div className="space-y-3 md:hidden">
                 {reminders.map((reminder) => {
-                    const dueDate = dateCalculator(reminder.due_date ?? undefined);
+                    const dueDate = dateCalculator(reminder.due_date ?? "");
                     const dueDateStyles =
                         dueDate.status === "upcoming"
                             ? "text-text-primary"
@@ -57,7 +57,6 @@ export default function PetReminderHistoryTable({
                             <div className="space-y-1 text-xs">
                                 <p className={dueDateStyles}>Due: {dueDate.date}</p>
                                 <p className="text-text-secondary">Completed: {dateFormatter(reminder.completed_at ?? reminder.date_completed ?? undefined)}</p>
-                                <p className="text-text-secondary">{reminder.description || "-"}</p>
                             </div>
                         </article>
                     );
@@ -72,12 +71,11 @@ export default function PetReminderHistoryTable({
                             <th className="px-6 py-4">Category</th>
                             <th className="px-6 py-4">Due Date</th>
                             <th className="px-6 py-4">Completed</th>
-                            <th className="px-6 py-4">Description</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {reminders.map((reminder) => {
-                            const dueDate = dateCalculator(reminder.due_date ?? undefined);
+                            const dueDate = dateCalculator(reminder.due_date ?? "");
                             const dueDateStyles =
                                 dueDate.status === "upcoming"
                                     ? ""
@@ -100,9 +98,6 @@ export default function PetReminderHistoryTable({
                                         {dateFormatter(
                                             reminder.completed_at ?? reminder.date_completed ?? undefined
                                         )}
-                                    </td>
-                                    <td className="px-6 py-4 text-text-secondary">
-                                        {reminder.description || "-"}
                                     </td>
                                 </tr>
                             );

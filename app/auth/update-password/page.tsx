@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/context/ModalContext";
-import { AuthError } from "@supabase/supabase-js";
+
 import { updatePassword } from "@/actions/auth";
 import BackButton from "@/components/ui/BackButton";
+import { User } from '@supabase/supabase-js'
 
 
 //Checkmark
@@ -28,7 +29,7 @@ const Dot = () => {
 
 export default function UpdatePassword() {
      const [loading, setLoading] = useState(true)
-    const [user, setUser] = useState<User | null>(null)
+    const [user, setUser] = useState<User|null>(null)
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("")
     const [isSuccess, setIsSuccess] = useState(false)
