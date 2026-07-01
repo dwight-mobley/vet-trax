@@ -42,3 +42,44 @@ export const getUserReminderHistory = async (userId: string) => {
   ));
   return reminders;
 }
+
+export const getPetReminderHistory = async (petId: string, userId: string) => {
+  const supabase = await createClient(await cookies());
+  const { data: history, error } = await supabase
+    .from("reminder_history")
+    .select("*, pets(name, owner_id)")
+    .eq("pet_id", petId)
+    .eq("pets.owner_id", userId)
+    .order("completed_at", { ascending: false });
+
+  if (error) {
+    console.log("Error fetching pet reminder history:", error);
+    return [];
+  }
+
+  return history.map((record) => ({ ...record, pet: record.pets }));
+}
+
+export const getPetUpcomingReminders = async (petId: string, userId: string) => {
+  const supabase = await createClient(await cookies());
+  const nowIso = new Date().toISOString();
+
+  const { data: reminders, error } = await supabase
+    .from("reminders")
+    .select("*, pets(name, owner_id)")
+    .eq("pet_id", petId)
+    .eq("pets.owner_id", userId)
+    .gte("due_date", nowIso)
+    .order("due_date", { ascending: true });
+
+  if (error) {
+    console.log("Error fetching pet upcoming reminders:", error);
+    return [];
+  }
+
+  return reminders.map((record) => ({
+    ...record,
+    pet: record.pets,
+    completed_at: record.completed_at ?? null,
+  }));
+}

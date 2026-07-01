@@ -12,3 +12,4 @@ export const getPetById = async (petId: string) => {
     const pet = await getSingleRecordByColumn("pets", "id", petId);
     return pet;
 }
+

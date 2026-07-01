@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPetById } from "@/data-access/pets";
+import { getPetReminderHistory, getPetUpcomingReminders } from "@/data-access/reminders";
+import { getPetMedicalRecords } from "@/data-access/medical-records";
 import { requireUser } from "@/utils/supabase/auth";
 import { DeletePetButton } from "@/components/ui/DeletePetButton";
 import Image from "next/image";
 import BackButton from "@/components/ui/BackButton";
+import PetHistoryTabs from "@/components/pets/history/PetHistoryTabs";
 
 export default async function PetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   // 1. Await params and user
@@ -20,13 +23,19 @@ export default async function PetDetailsPage({ params }: { params: Promise<{ id:
     notFound();
   }
 
-  const age: number | string = pet.birth_date ? new Date().getFullYear() - new Date(pet.birth_date!).getFullYear() || "less than 1": "_";
+  const [upcomingReminders, reminderHistory, medicalRecordHistory] = await Promise.all([
+    getPetUpcomingReminders(pet.id, user.id),
+    getPetReminderHistory(pet.id, user.id),
+    getPetMedicalRecords(pet.id, user.id),
+  ]);
+
+  const age: number | string = pet.birth_date ? new Date().getFullYear() - new Date(pet.birth_date!).getFullYear() || "less than 1" : "_";
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 md:p-12 border">
       {/* Back Navigation */}
       <div className="mb-6">
-       <BackButton/>
+        <BackButton />
       </div>
 
       {/* Profile Card */}
@@ -88,6 +97,13 @@ export default async function PetDetailsPage({ params }: { params: Promise<{ id:
           {pet.notes ? <div className="bg-background-paper p-4 rounded-medium border border-text-disabled text-text-primary italic">{pet.notes}</div> : <p className="text-text-disabled italic">No notes added for this pet.</p>}
         </div>
       </div>
+
+      <PetHistoryTabs
+        upcomingReminders={upcomingReminders}
+        reminderHistory={reminderHistory}
+        medicalRecordHistory={medicalRecordHistory}
+      />
+
       <DeletePetButton petId={pet.id} />
     </div>
   );
